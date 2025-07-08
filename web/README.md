@@ -6,11 +6,11 @@
 ## Tính năng chính
 - **Quản lý sản phẩm:** Thêm, sửa, xóa, tìm kiếm và phân loại các thiết bị điện tử với thông tin chi tiết và hình ảnh.
 - **Quản lý đơn hàng:** Tạo, cập nhật, theo dõi trạng thái đơn hàng, lịch sử mua hàng của khách.
-- **Quản lý khách hàng:** Lưu trữ thông tin, lịch sử giao dịch, hỗ trợ chăm sóc khách hàng.
+- **Quản lý khách hàng:** Lưu trữ thông tin, lịch sử giao dịch.
 - **Quản lý kho:** Theo dõi tồn kho, nhập/xuất hàng, cảnh báo khi sắp hết hàng.
-- **Kế toán:** Quản lý hóa đơn, thanh toán, báo cáo doanh thu, chi phí.
+- **Kế toán:** Báo cáo doanh thu.
 - **Phân quyền người dùng:** Hệ thống phân quyền cho quản trị viên, nhân viên bán hàng, nhân viên kho, nhân viên kế toán và khách hàng.
-- **Giao diện thân thiện:** Thiết kế responsive, dễ sử dụng trên mọi thiết bị.
+- **Giao diện thân thiện:** Thiết kế responsive, dễ sử dụng trên giao diện web.
 - **Thông báo:** Cập nhật trạng thái đơn hàng, cảnh báo tồn kho, thông báo hệ thống.
 
 ## Công nghệ sử dụng
@@ -106,9 +106,9 @@ README.md
 - Hỗ trợ liên hệ, gửi phản hồi qua trang liên hệ.
 
 ## Thành viên nhóm
-- Phạm Anh Kiệt
-- Lương Văn Duy
-- Nguyễn Hà Vũ Kha
+- Phạm Anh Kiệt - (Leader + Backend + AI) 
+- Lương Văn Duy - (Frontend)
+- Nguyễn Hà Vũ Kha (Tester)
 
 ## Đóng góp
 Chào mừng mọi đóng góp! Hãy fork repository và gửi pull request để được xem xét.

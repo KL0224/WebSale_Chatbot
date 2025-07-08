@@ -5,7 +5,7 @@ from .forms import AddProducts
 import secrets, os  # Băm ảnh để không trùng lặp
 from shop.models import User, Role
 from shop.customers.forms import ReviewForm
-from shop.customers.model import Review
+from shop.customers.model import Review, OrderDetail, Order
 from ..decorators import role_required
 
 
@@ -281,6 +281,12 @@ def updateproduct(id):
 @role_required(['admin', 'sale'])
 def deleteproduct(id):
     product = AddProduct.query.get_or_404(id)
+    orders_details = OrderDetail.query.filter_by(product_id=product.id).all()
+    for order in orders_details:
+        orders = Order.query.filter_by(id=order.order_id).first()
+        if orders and (orders.status == 'pending' or orders.status == 'accepted'):
+            flash('Không thể xóa sản phẩm vì tồn tại đơn hàng!', 'danger')
+            return redirect(request.referrer)
     if request.method == 'POST':
         try:
             os.unlink(os.path.join(current_app.root_path, 'static/images/' + product.image_1))
