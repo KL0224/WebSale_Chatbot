@@ -22,7 +22,7 @@
                     {% endwith %}
 
                     <form method="post">
-                        {{ form.csrf_token }}
+                        {{ form.hidden_tag() }}
                         <div class="mb-3">
                             {{ form.name.label(class="form-label") }}
                             {{ form.name(class="form-control") }}

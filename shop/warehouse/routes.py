@@ -39,7 +39,7 @@ def warehouse_add():
     storekeepers = Staff.query.filter_by(role_id=role.id).all()
     form.manager_id.choices = [(sk.id, sk.username) for sk in storekeepers]
 
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         warehouse = Warehouse(
             name=form.name.data,
             location=form.location.data,
@@ -108,6 +108,9 @@ def adjust_stock(id):
     product = AddProduct.query.get_or_404(id)
     adjustment_type = request.form.get('adjustment_type')
     adjustment_quantity = int(request.form.get('adjustment_quantity', 0))
+    if adjustment_quantity < 0:
+        flash('Số lượng điều chỉnh không hợp lệ', 'danger')
+        return redirect(url_for('warehouse'))
     adjustment_reason = request.form.get('adjustment_reason')
 
     current_stock = product.stock
@@ -136,7 +139,7 @@ def inbound_receipt_add():
     form.warehouse_id.choices = [(w.id, w.name) for w in warehouses]
 
     products = AddProduct.query.all()
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         receipt = InboundReceipt(
             receipt_number=form.receipt_number.data,
             receipt_date=form.receipt_date.data,
@@ -153,7 +156,7 @@ def inbound_receipt_add():
         # Lấy dữ liêu chi tiết từ form
         product_ids = request.form.getlist('product_id[]')
         quantities = request.form.getlist('quantity[]')
-        pricse = request.form.getlist('price[]')
+        prices = request.form.getlist('price[]')
         subtotals = request.form.getlist('subtotal[]')
 
         # Tạo các chi tiết phiêu nhập
@@ -162,9 +165,9 @@ def inbound_receipt_add():
                 detail = InboundReceiptDetail(
                     inbound_receipt_id=receipt.id,
                     product_id=product_ids[i],
-                    quantity=quantities[i],
-                    price=pricse[i],
-                    subtotal=subtotals[i]
+                    quantity=int(quantities[i]),
+                    price=float(prices[i]),
+                    subtotal=float(subtotals[i])
                 )
                 db.session.add(detail)
 
@@ -192,30 +195,22 @@ def inbound_receipt_edit(id):
         return redirect(url_for('inbound_receipt'))
 
     form = InboundReceiptForm(obj=receipt)
-    wasehouses = Warehouse.query.filter_by(status='active').all()
-    form.warehouse_id.choices = [(w.id, w.name) for w in wasehouses]
+    warehouses = Warehouse.query.filter_by(status='active').all()
+    form.warehouse_id.choices = [(w.id, w.name) for w in warehouses]
     products = AddProduct.query.all()
 
-    if request.method == "GET":
-        form.receipt_number.data = receipt.receipt_number
-        form.receipt_date.data = receipt.receipt_date
-        form.supplier.data = receipt.supplier
-        form.notes.data = receipt.notes
-        form.warehouse_id.data = receipt.warehouse_id
-
-        return render_template('warehouse/inbound_receipt_edit.html', title='Edit Inbound Receipt', form=form, receipt=receipt, products=products, receipt_details=receipt.receipt_details)
-
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         receipt.receipt_number = form.receipt_number.data
         receipt.receipt_date = form.receipt_date.data
         receipt.supplier = form.supplier.data
         receipt.notes = form.notes.data
         receipt.warehouse_id = form.warehouse_id.data
-        receipt.total_amount = request.form.get('total_amount', 0)
+        receipt.total_amount = float(request.form.get('total_amount', 0))
 
         # Xóa các chi tiết cũ
         for detail in receipt.receipt_details:
             db.session.delete(detail)
+        db.session.flush()
 
         # Lấy dữ liệu chi tiết từ form
         products_ids = request.form.getlist('product_id[]')
@@ -229,9 +224,9 @@ def inbound_receipt_edit(id):
                 detail = InboundReceiptDetail(
                     inbound_receipt_id=receipt.id,
                     product_id=products_ids[i],
-                    quantity=quantities[i],
-                    price=prices[i],
-                    subtotal=subtotals[i]
+                    quantity=int(quantities[i]),
+                    price=float(prices[i]),
+                    subtotal=float(subtotals[i])
                 )
                 db.session.add(detail)
 
@@ -266,6 +261,8 @@ def inbound_receipt_complete(id):
 
     # Cập nhật số lượng sản phẩm trong kho
     for detail in receipt.receipt_details:
+        if detail.quantity <= 0:
+            continue
         product = AddProduct.query.get(detail.product_id)
         if product:
             product.stock += detail.quantity
@@ -308,7 +305,7 @@ def outbound_receipt_add():
     form.warehouse_id.choices = [(w.id, w.name) for w in warehouses]
 
     products = AddProduct.query.all()
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         receipt = OutboundReceipt(
             receipt_number=form.receipt_number.data,
             receipt_date=form.receipt_date.data,
@@ -317,7 +314,7 @@ def outbound_receipt_add():
             warehouse_id=form.warehouse_id.data,
             created_by=current_user.id,
             status='pending',
-            total_amount=request.form.get('total_amount', 0)
+            total_amount=float(request.form.get('total_amount', 0))
         )
         db.session.add(receipt)
         db.session.flush()  # Lấy ID của receipt mới tạo
@@ -333,9 +330,9 @@ def outbound_receipt_add():
                 detail = OutboundReceiptDetail(
                     outbound_receipt_id=receipt.id,
                     product_id=product_ids[i],
-                    quantity=quantities[i],
-                    price=prices[i],
-                    subtotal=subtotals[i]
+                    quantity=int(quantities[i]),
+                    price=float(prices[i]),
+                    subtotal=float(subtotals[i])
                 )
                 db.session.add(detail)
         db.session.commit()
@@ -365,26 +362,18 @@ def outbound_receipt_edit(id):
     form.warehouse_id.choices = [(w.id, w.name) for w in warehouses]
     products = AddProduct.query.all()
 
-    if request.method == "GET":
-        form.receipt_number.data = receipt.receipt_number
-        form.receipt_date.data = receipt.receipt_date
-        form.recipient.data = receipt.recipient
-        form.notes.data = receipt.notes
-        form.warehouse_id.data = receipt.warehouse_id
-
-        return render_template('warehouse/outbound_receipt_edit.html', title='Edit Outbound Receipt', form=form, receipt=receipt, products=products, receipt_details=receipt.receipt_details)
-
-    if request.method == 'POST' and form.validate_on_submit():
+    if form.validate_on_submit():
         receipt.receipt_number = form.receipt_number.data
         receipt.receipt_date = form.receipt_date.data
         receipt.recipient = form.recipient.data
         receipt.notes = form.notes.data
         receipt.warehouse_id = form.warehouse_id.data
-        receipt.total_amount = request.form.get('total_amount', 0)
+        receipt.total_amount = float(request.form.get('total_amount', 0))
 
         # Xóa các chi tiết cũ
         for detail in receipt.receipt_details:
             db.session.delete(detail)
+        db.session.flush()
 
         # Lấy dữ liệu chi tiết từ form
         product_ids = request.form.getlist('product_id[]')
@@ -398,9 +387,9 @@ def outbound_receipt_edit(id):
                 detail = OutboundReceiptDetail(
                     outbound_receipt_id=receipt.id,
                     product_id=product_ids[i],
-                    quantity=quantities[i],
-                    price=prices[i],
-                    subtotal=subtotals[i]
+                    quantity=int(quantities[i]),
+                    price=float(prices[i]),
+                    subtotal=float(subtotals[i])
                 )
                 db.session.add(detail)
 

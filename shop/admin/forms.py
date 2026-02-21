@@ -1,4 +1,4 @@
-from wtforms import Form, StringField, PasswordField, validators, SubmitField
+from wtforms import Form, StringField, PasswordField, validators, SubmitField, BooleanField
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import SelectField
 from shop.models import User, Role
@@ -25,10 +25,11 @@ class StaffRegistrationForm(FlaskForm):
             )).all()]
 
 
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     email = StringField('Email', [validators.Length(min=6, max=30), validators.Email()])
     password = PasswordField('Mật khẩu', [validators.DataRequired()])
-
+    remember = BooleanField('Nhớ tôi')
+    submit = SubmitField()
 
 class RoleForm(FlaskForm):
     name = StringField('Tên vai trò', [validators.DataRequired()])
@@ -36,9 +37,10 @@ class RoleForm(FlaskForm):
     submit = SubmitField()
 
 
-class ChangePasswordForm(Form):
+class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Mật khẩu hiện tại', [validators.DataRequired()])
     new_password = PasswordField('Mật khẩu mới',
                                  validators=[validators.DataRequired(), validators.Length(min=6, max=30)])
     confirm = PasswordField('Xác nhận mật khẩu', validators=[validators.DataRequired(), validators.EqualTo('new_password',
                                                                                                          message='Mật khẩu phải trùng khớp')])
+    submit = SubmitField()

@@ -20,7 +20,7 @@
           {% from "_formhelpers.html" import render_field %}
 
           <form method="post" enctype="multipart/form-data" class="animate__animated animate__fadeIn animate__delay-0.2s">
-            <input type="hidden" name="csrf_token" value="{{ form.csrf_token._value() }}">
+            {{ form.hidden_tag() }}
             <div class="row">
               <div class="col-md-6 mb-4">
                 {{ render_field(form.username, class_="form-control border-primary shadow-sm") }}

@@ -1,525 +1,1518 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <style>
-  /* Hover effect cho nav links */
-  .nav-link:not(.bg-primary):hover {
-      background-color: rgba(13, 110, 253, 0.1) !important;
-      color: #0d6efd !important;
-  }
+    <style>
+        /* Hover effect cho nav links */
+        .nav-link:not(.bg-primary):hover {
+            background-color: rgba(13, 110, 253, 0.1) !important;
+            color: #0d6efd !important;
+        }
 
-  .nav-link:hover i {
-      color: #0d6efd !important;
-  }
-  </style>
+        .nav-link:hover i {
+            color: #0d6efd !important;
+        }
+    </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    
-        <style>
-      :root {
-        --primary-color: #3b82f6;
-        --primary-dark: #2563eb;
-        --secondary-color: #10b981;
-        --accent-color: #f59e0b;
-        --dark-color: #1e293b;
-        --light-bg: #f8fafc;
-        --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --elevated-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      }
-      
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        scroll-behavior: smooth;
-      }
-      
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: var(--light-bg);
-        display: flex;
-        flex-direction: column;
-        color: #334155;
-      }
-      
-      .content-wrapper {
-        flex: 1 0 auto;
-      }
-      
-      .brand-highlight {
-        color: var(--accent-color);
-        font-weight: 700;
-      }
-      
-      /* Navigation Cards */
-      .nav-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: var(--card-shadow);
-        border: none;
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .nav-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--elevated-shadow);
-      }
-      
-      .nav-card::before {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: var(--primary-color);
-        transform: scaleX(0);
-        transform-origin: right;
-        transition: transform 0.3s ease;
-      }
-      
-      .nav-card:hover::before {
-        transform: scaleX(1);
-        transform-origin: left;
-      }
-      
-      .nav-card-icon {
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 12px;
-        margin-bottom: 1rem;
-      }
-      
-      /* Modern Footer */
-      .modern-footer {
-        background: var(--dark-color);
-        color: white;
-        position: relative;
-        padding: 3rem 0 1.5rem;
-        flex-shrink: 0;
-      }
-      
-      .modern-footer::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-      }
-      
-      .footer-logo {
-        font-size: 1.25rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        margin-bottom: 1rem;
-      }
-      
-      .footer-logo i {
-        color: var(--accent-color);
-        margin-right: 8px;
-      }
-      
-      .social-icon {
-        width: 36px;
-        height: 36px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        transition: all 0.3s ease;
-      }
-      
-      .social-icon:hover {
-        background: var(--accent-color);
-        transform: translateY(-3px);
-      }
-      
-      .footer-link {
-        position: relative;
-        padding-bottom: 4px;
-        display: inline-block;
-        transition: color 0.2s ease;
-      }
-      
-      .footer-link::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: var(--accent-color);
-        transition: width 0.3s ease;
-      }
-      
-      .footer-link:hover {
-        color: white !important;
-      }
-      
-      .footer-link:hover::after {
-        width: 100%;
-      }
-      
-      .contact-info i {
-        color: var(--accent-color);
-        margin-right: 8px;
-        font-size: 1rem;
-      }
+
+
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary-color: #10b981;
+            --accent-color: #f59e0b;
+            --dark-color: #1e293b;
+            --light-bg: #f8fafc;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --elevated-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            display: flex;
+            flex-direction: column;
+            color: #334155;
+        }
+
+        .content-wrapper {
+            flex: 1 0 auto;
+        }
+
+        .brand-highlight {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        /* Navigation Cards */
+        .nav-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--elevated-shadow);
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-color);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-card:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-card-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        /* Modern Footer */
+        .modern-footer {
+            background: var(--dark-color);
+            color: white;
+            position: relative;
+            padding: 3rem 0 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .modern-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .footer-logo {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo i {
+            color: var(--accent-color);
+            margin-right: 8px;
+        }
+
+        .social-icon {
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-link {
+            position: relative;
+            padding-bottom: 4px;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: white !important;
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        .contact-info i {
+            color: var(--accent-color);
+            margin-right: 8px;
+            font-size: 1rem;
+        }
 
         /* Promo Banner Carousel */
-  .promo-banner {
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    color: white;
-    height: 0;
-    padding-bottom: 31.58%; /* 6/19 ≈ 31.58% */
-  }
-
-  .promo-banner-content {
-    position: absolute;
-    z-index: 2;
-    padding: 2rem;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
-  .promo-banner-bg {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    z-index: 1;
-    opacity: 1;
-  }
-
-  .promo-badge {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-      
-      /* Section Headings */
-      .section-heading {
-        position: relative;
-        display: inline-block;
-        margin-bottom: 1.5rem;
-      }
-      
-      .section-heading::after {
-        content: '';
-        position: absolute;
-        bottom: -8px;
-        left: 0;
-        width: 50%;
-        height: 3px;
-        background: var(--accent-color);
-        border-radius: 3px;
-      }
-      
-      /* Newsletter Form */
-      .newsletter-input {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: white !important;
-      }
-      
-      .newsletter-input::placeholder {
-        color: rgba(255, 255, 255, 0.7) !important;
-      }
-      
-      .newsletter-btn {
-        background: var(--accent-color) !important;
-        border-color: var(--accent-color) !important;
-        transition: all 0.3s ease;
-      }
-      
-      .newsletter-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      
-      /* Carousel Indicators */
-      .carousel-indicators [data-bs-target] {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        margin: 0 5px;
-        border: none;
-        background-color: rgba(255,255,255,0.5);
-      }
-      
-      .carousel-indicators .active {
-        background-color: var(--accent-color);
-      }
-      
-      /* Responsive Adjustments */
-      @media (max-width: 768px) {
         .promo-banner {
-          height: auto;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            color: white;
+            height: 0;
+            padding-bottom: 31.58%; /* 6/19 ≈ 31.58% */
         }
-        
+
         .promo-banner-content {
-          padding: 1.5rem;
+            position: absolute;
+            z-index: 2;
+            padding: 2rem;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        
+
         .promo-banner-bg {
-          opacity: 0.4;
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            z-index: 1;
+            opacity: 1;
         }
-        
-        .nav-card-icon {
-          width: 40px;
-          height: 40px;
-          margin-bottom: 0.75rem;
+
+        .promo-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 1rem;
         }
-        
-        .modern-footer {
-          padding: 2rem 0 1rem;
+
+        /* Section Headings */
+        .section-heading {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
         }
-      }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50%;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        /* Newsletter Form */
+        .newsletter-input {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        .newsletter-btn {
+            background: var(--accent-color) !important;
+            border-color: var(--accent-color) !important;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin: 0 5px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .carousel-indicators .active {
+            background-color: var(--accent-color);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .promo-banner {
+                height: auto;
+            }
+
+            .promo-banner-content {
+                padding: 1.5rem;
+            }
+
+            .promo-banner-bg {
+                opacity: 0.4;
+            }
+
+            .nav-card-icon {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 0.75rem;
+            }
+
+            .modern-footer {
+                padding: 2rem 0 1rem;
+            }
+        }
     </style>
     <title>{% block title %} AzPhone Store {% endblock title %}</title>
 </head>
-  <body>
-    
-    <div class="content-wrapper">
-      <!-- Promotional Banner Carousel - Only on Homepage -->
-      {% if request.endpoint == 'home' or request.endpoint == 'index' %}
-      <section class="py-4">
-        <div class="container">
-          <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner rounded-3 overflow-hidden">
+<body>
+
+<div class="content-wrapper">
+    <!-- Promotional Banner Carousel - Only on Homepage -->
+    {% if request.endpoint == 'home' or request.endpoint == 'index' %}
+        <section class="py-4">
+            <div class="container">
+                <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner rounded-3 overflow-hidden">
                         <!-- Slide 1 -->
-          <div class="carousel-item active">
-            <div class="promo-banner" style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));">
-              <div class="row h-100 align-items-center">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6 d-none d-md-block h-100">
-                  <img src="{{ url_for('static', filename='images/banner/banner0.png') }}" alt="advertising" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                </div>
-              </div>
-            </div>
-          </div>
+                        <div class="carousel-item active">
+                            <div class="promo-banner"
+                                 style="background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner0.png') }}"
+                                             alt="advertising" class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-          <!-- Slide 2 with s24edge.jpg -->
-          <div class="carousel-item">
-            <div class="promo-banner" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
-              <div class="row h-100 align-items-center">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6 d-none d-md-block h-100">
-                  <img src="{{ url_for('static', filename='images/banner/banner1.png') }}" alt="Samsung S24 Edge" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                </div>
-              </div>
-            </div>
-          </div>
+                        <!-- Slide 2 with s24edge.jpg -->
+                        <div class="carousel-item">
+                            <div class="promo-banner" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner1.png') }}"
+                                             alt="Samsung S24 Edge"
+                                             class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-          <!-- Slide 3 -->
-          <div class="carousel-item">
-            <div class="promo-banner" style="background: linear-gradient(135deg, #059669, #10b981);">
-              <div class="row h-100 align-items-center">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6 d-none d-md-block h-100">
-                  <img src="{{ url_for('static', filename='images/banner/banner2.png') }}" alt="Oppo reno13" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                </div>
-              </div>
-            </div>
-          </div>
+                        <!-- Slide 3 -->
+                        <div class="carousel-item">
+                            <div class="promo-banner" style="background: linear-gradient(135deg, #059669, #10b981);">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner2.png') }}"
+                                             alt="Oppo reno13" class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Slide 4 - New Banner -->
-              <div class="carousel-item">
-                <div class="promo-banner" style="background: linear-gradient(135deg, #d946ef, #a855f7);">
-                  <div class="row h-100 align-items-center">
-                    <div class="col-md-6">
-                    </div>
-                    <div class="col-md-6 d-none d-md-block h-100">
-                      <img src="{{ url_for('static', filename='images/banner/banner3.png') }}" alt="Smartwatch" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                    </div>
-                  </div>
-                </div>
-              </div>
+                        <div class="carousel-item">
+                            <div class="promo-banner" style="background: linear-gradient(135deg, #d946ef, #a855f7);">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner3.png') }}"
+                                             alt="Smartwatch" class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-              <!-- Slide 5 - New Banner -->
-              <div class="carousel-item">
-                <div class="promo-banner" style="background: linear-gradient(135deg, #f97316, #f59e0b);">
-                  <div class="row h-100 align-items-center">
-                    <div class="col-md-6">
-                    </div>
-                    <div class="col-md-6 d-none d-md-block h-100">
-                      <img src="{{ url_for('static', filename='images/banner/banner4.png') }}" alt="IP16" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                    </div>
-                  </div>
-                </div>
-              </div>
+                        <!-- Slide 5 - New Banner -->
+                        <div class="carousel-item">
+                            <div class="promo-banner" style="background: linear-gradient(135deg, #f97316, #f59e0b);">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner4.png') }}"
+                                             alt="IP16" class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-              <!-- Slide 6 - New Banner -->
-              <div class="carousel-item">
-                <div class="promo-banner" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6);">
-                  <div class="row h-100 align-items-center">
-                    <div class="col-md-6">
-                    </div>
-                    <div class="col-md-6 d-none d-md-block h-100">
-                      <img src="{{ url_for('static', filename='images/banner/banner5.png') }}" alt="OnePlus Banner" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Slide 7 - New Banner -->
-              <div class="carousel-item">
-                <div class="promo-banner" style="background: linear-gradient(135deg, #64748b, #475569);">
-                  <div class="row h-100 align-items-center">
-                    <div class="col-md-6">
-                      <div class="promo-banner-content">
-                        <a href="/products" class="btn btn-light btn-lg rounded-pill px-4 align-self-start">Shop All <i class="bi bi-arrow-right ms-2"></i></a>
-                      </div>
-                    </div>
-                    <div class="col-md-6 d-none d-md-block h-100">
-                      <img src="{{ url_for('static', filename='images/banner/banner6.png') }}" alt="Advertising Banner" class="h-100 w-100 object-fit-cover promo-banner-bg">
-                    </div>
-                  </div>
-                </div>
-              </div>
+                        <!-- Slide 6 - New Banner -->
+                        <div class="carousel-item">
+                            <div class="promo-banner" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6);">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner5.png') }}"
+                                             alt="OnePlus Banner" class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Carousel Indicators -->
-            <div class="carousel-indicators position-relative mt-3">
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active"></button>
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1"></button>
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2"></button>
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="3"></button>
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="4"></button>
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="5"></button>
-              <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="6"></button>
-            </div>
-          </div>
-        </div>
-      </section>
-      {% endif %}
+                        <!-- Slide 7 - New Banner -->
+                        <div class="carousel-item">
+                            <div class="promo-banner" style="background: linear-gradient(135deg, #64748b, #475569);">
+                                <div class="row h-100 align-items-center">
+                                    <div class="col-md-6">
+                                        <div class="promo-banner-content">
+                                            <a href="/products"
+                                               class="btn btn-light btn-lg rounded-pill px-4 align-self-start">Shop All
+                                                <i class="bi bi-arrow-right ms-2"></i></a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 d-none d-md-block h-100">
+                                        <img src="{{ url_for('static', filename='images/banner/banner6.png') }}"
+                                             alt="Advertising Banner"
+                                             class="h-100 w-100 object-fit-cover promo-banner-bg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-      {% block content %}
+                        <!-- Carousel Indicators -->
+                        <div class="carousel-indicators position-relative mt-3">
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0"
+                                    class="active"></button>
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2"></button>
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="3"></button>
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="4"></button>
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="5"></button>
+                            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="6"></button>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    {% endif %}
+
+    {% block content %}
         <!-- Quick Access Section -->
         <section class="py-5">
-          <div class="container">
-            <h2 class="section-heading fw-bold">Quick Access</h2>
-            <div class="row g-4">
-              <div class="col-md-3 col-6">
-                <a href="/shop/static" class="text-decoration-none">
-                  <div class="nav-card bg-white p-4 h-100">
-                    <div class="nav-card-icon bg-primary bg-opacity-10 text-primary">
-                      <i class="bi bi-house-door-fill fs-4"></i>
+            <div class="container">
+                <h2 class="section-heading fw-bold">Quick Access</h2>
+                <div class="row g-4">
+                    <div class="col-md-3 col-6">
+                        <a href="/shop/static" class="text-decoration-none">
+                            <div class="nav-card bg-white p-4 h-100">
+                                <div class="nav-card-icon bg-primary bg-opacity-10 text-primary">
+                                    <i class="bi bi-house-door-fill fs-4"></i>
+                                </div>
+                                <h5 class="fw-semibold mb-2">Home</h5>
+                                <p class="text-muted small mb-0">Back to homepage</p>
+                            </div>
+                        </a>
                     </div>
-                    <h5 class="fw-semibold mb-2">Home</h5>
-                    <p class="text-muted small mb-0">Back to homepage</p>
-                  </div>
-                </a>
-              </div>
-              
-              <div class="col-md-3 col-6">
-                <a href="/products" class="text-decoration-none">
-                  <div class="nav-card bg-white p-4 h-100">
-                    <div class="nav-card-icon bg-success bg-opacity-10 text-success">
-                      <i class="bi bi-box-seam-fill fs-4"></i>
+
+                    <div class="col-md-3 col-6">
+                        <a href="/products" class="text-decoration-none">
+                            <div class="nav-card bg-white p-4 h-100">
+                                <div class="nav-card-icon bg-success bg-opacity-10 text-success">
+                                    <i class="bi bi-box-seam-fill fs-4"></i>
+                                </div>
+                                <h5 class="fw-semibold mb-2">Products</h5>
+                                <p class="text-muted small mb-0">Browse our collection</p>
+                            </div>
+                        </a>
                     </div>
-                    <h5 class="fw-semibold mb-2">Products</h5>
-                    <p class="text-muted small mb-0">Browse our collection</p>
-                  </div>
-                </a>
-              </div>
-              
-              <div class="col-md-3 col-6">
-                <a href="/about" class="text-decoration-none">
-                  <div class="nav-card bg-white p-4 h-100">
-                    <div class="nav-card-icon bg-info bg-opacity-10 text-info">
-                      <i class="bi bi-info-circle-fill fs-4"></i>
+
+                    <div class="col-md-3 col-6">
+                        <a href="/about" class="text-decoration-none">
+                            <div class="nav-card bg-white p-4 h-100">
+                                <div class="nav-card-icon bg-info bg-opacity-10 text-info">
+                                    <i class="bi bi-info-circle-fill fs-4"></i>
+                                </div>
+                                <h5 class="fw-semibold mb-2">About Us</h5>
+                                <p class="text-muted small mb-0">Our story and mission</p>
+                            </div>
+                        </a>
                     </div>
-                    <h5 class="fw-semibold mb-2">About Us</h5>
-                    <p class="text-muted small mb-0">Our story and mission</p>
-                  </div>
-                </a>
-              </div>
-              
-              <div class="col-md-3 col-6">
-                <a href="/contact" class="text-decoration-none">
-                  <div class="nav-card bg-white p-4 h-100">
-                    <div class="nav-card-icon bg-warning bg-opacity-10 text-warning">
-                      <i class="bi bi-headset fs-4"></i>
+
+                    <div class="col-md-3 col-6">
+                        <a href="/contact" class="text-decoration-none">
+                            <div class="nav-card bg-white p-4 h-100">
+                                <div class="nav-card-icon bg-warning bg-opacity-10 text-warning">
+                                    <i class="bi bi-headset fs-4"></i>
+                                </div>
+                                <h5 class="fw-semibold mb-2">Contact</h5>
+                                <p class="text-muted small mb-0">Get in touch with us</p>
+                            </div>
+                        </a>
                     </div>
-                    <h5 class="fw-semibold mb-2">Contact</h5>
-                    <p class="text-muted small mb-0">Get in touch with us</p>
-                  </div>
-                </a>
-              </div>
+                </div>
             </div>
-          </div>
         </section>
-        
-      {% endblock content %}
-    </div>
-    <!-- Footer -->
-     {% if show_footer is not defined or show_footer %}
+
+    {% endblock content %}
+</div>
+<!-- Footer -->
+{% if show_footer is not defined or show_footer %}
     {% include "footer.html" %}
 {% endif %}
 
 
-    <!-- Scripts -->
-    <script src="{{url_for('static', filename='js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{url_for('static', filename='js/popper.min.js')}}"></script>
-    <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      // Initialize carousel with 3 second interval
-      document.addEventListener('DOMContentLoaded', function() {
+<!-- Scripts -->
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Initialize carousel with 3 second interval
+    document.addEventListener('DOMContentLoaded', function () {
         const promoCarousel = document.getElementById('promoCarousel');
         if (promoCarousel) {
-          const carousel = new bootstrap.Carousel(promoCarousel, {
-            interval: 3000, //
-            wrap: true,
-            pause: 'hover'
-          });
+            const carousel = new bootstrap.Carousel(promoCarousel, {
+                interval: 3000, //
+                wrap: true,
+                pause: 'hover'
+            });
         }
 
         // Animation for elements when they come into view
-        const animateOnScroll = function() {
-          const elements = document.querySelectorAll('.nav-card, .carousel-item');
-          
-          elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
-            const windowHeight = window.innerHeight;
-            
-            if (elementPosition < windowHeight - 100) {
-              element.classList.add('animate__animated', 'animate__fadeIn');
-            }
-          });
+        const animateOnScroll = function () {
+            const elements = document.querySelectorAll('.nav-card, .carousel-item');
+
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementPosition < windowHeight - 100) {
+                    element.classList.add('animate__animated', 'animate__fadeIn');
+                }
+            });
         };
-        
+
         window.addEventListener('scroll', animateOnScroll);
         animateOnScroll();
-      });
-    </script>
-    
-  </body>
+    });
+</script>
+<!-- ===== CHATBOT WIDGET START ===== -->
+<style>
+    .chatbot-toggle-btn {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .chatbot-toggle-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .chatbot-toggle-btn svg {
+        width: 28px;
+        height: 28px;
+        fill: white;
+    }
+
+    .chatbot-toggle-btn.active svg.icon-chat {
+        display: none;
+    }
+
+    .chatbot-toggle-btn.active svg.icon-close {
+        display: block;
+    }
+
+    .chatbot-toggle-btn svg.icon-close {
+        display: none;
+    }
+
+    .chatbot-window {
+        position: fixed;
+        bottom: 100px;
+        right: 24px;
+        width: 400px;
+        height: 560px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        animation: cbSlideUp 0.3s ease;
+    }
+
+    .chatbot-window.open {
+        display: flex;
+    }
+
+    @keyframes cbSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .chatbot-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
+
+    .chatbot-header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .chatbot-header-left .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chatbot-header-left .avatar svg {
+        width: 20px;
+        height: 20px;
+        fill: white;
+    }
+
+    .chatbot-header-left .info h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .chatbot-header-left .info span {
+        font-size: 11px;
+        opacity: 0.8;
+    }
+
+    .chatbot-header-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .chatbot-header-actions button {
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        border-radius: 8px;
+        width: 34px;
+        height: 34px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+    .chatbot-header-actions button:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .chatbot-header-actions button svg {
+        width: 18px;
+        height: 18px;
+        fill: white;
+    }
+
+    .chatbot-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .chatbot-sidebar {
+        width: 0;
+        background: #f8f9fa;
+        border-right: 1px solid #e9ecef;
+        overflow-y: auto;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .chatbot-sidebar.open {
+        width: 200px;
+    }
+
+    .chatbot-sidebar-header {
+        padding: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .chatbot-sidebar-header .btn-new-chat {
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 4px 10px;
+        font-size: 11px;
+        cursor: pointer;
+    }
+
+    .chatbot-sidebar-header .btn-new-chat:hover {
+        background: #5a6fd6;
+    }
+
+    .cb-history-list {
+        list-style: none;
+        padding: 8px;
+        margin: 0;
+    }
+
+    .cb-history-list li {
+        padding: 10px 12px;
+        font-size: 12px;
+        color: #495057;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .cb-history-list li:hover {
+        background: #e9ecef;
+    }
+
+    .cb-history-list li.active {
+        background: #667eea;
+        color: white;
+    }
+
+    .cb-history-list li .delete-chat {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        color: inherit;
+        opacity: 0;
+        transition: opacity 0.2s;
+        padding: 0 4px;
+    }
+
+    .cb-history-list li:hover .delete-chat {
+        opacity: 0.7;
+    }
+
+    .cb-history-list li .delete-chat:hover {
+        opacity: 1;
+    }
+
+    .chatbot-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        background: #f8f9fa;
+    }
+
+    .chatbot-messages::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .chatbot-messages::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+
+    .cb-msg {
+        display: flex;
+        gap: 8px;
+        max-width: 85%;
+        animation: cbFadeIn 0.3s ease;
+    }
+
+    @keyframes cbFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .cb-msg.user {
+        align-self: flex-end;
+        flex-direction: row-reverse;
+    }
+
+    .cb-msg.bot {
+        align-self: flex-start;
+    }
+
+    .cb-msg .bubble {
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.7;
+        word-wrap: break-word;
+        letter-spacing: 0.01em;
+        white-space: pre-wrap;
+    }
+
+    .cb-msg.user .bubble {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+
+    .cb-msg.bot .bubble {
+        background: white;
+        color: #2d2d2d;
+        border: 1px solid #e9ecef;
+        border-bottom-left-radius: 4px;
+        white-space: normal;
+    }
+
+    .cb-msg .msg-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #e9ecef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+    }
+
+    .cb-msg.user .msg-avatar {
+        background: #667eea;
+        color: white;
+    }
+
+    .cb-typing {
+        display: flex;
+        gap: 4px;
+        padding: 12px 16px;
+        align-items: center;
+    }
+
+    .cb-typing span {
+        width: 8px;
+        height: 8px;
+        background: #aaa;
+        border-radius: 50%;
+        animation: cbBounce 1.4s infinite ease-in-out;
+    }
+
+    .cb-typing span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .cb-typing span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes cbBounce {
+        0%, 60%, 100% {
+            transform: translateY(0);
+        }
+        30% {
+            transform: translateY(-8px);
+        }
+    }
+
+    .chatbot-input-area {
+        padding: 12px 16px;
+        border-top: 1px solid #e9ecef;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        background: white;
+        flex-shrink: 0;
+    }
+
+    .chatbot-input-area input {
+        flex: 1;
+        border: 1px solid #e0e0e0;
+        border-radius: 24px;
+        padding: 10px 16px;
+        font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .chatbot-input-area input:focus {
+        border-color: #667eea;
+    }
+
+    .chatbot-input-area .btn-send {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chatbot-input-area .btn-send:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .chatbot-input-area .btn-send svg {
+        width: 18px;
+        height: 18px;
+        fill: white;
+    }
+
+    .cb-welcome {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        text-align: center;
+        color: #666;
+    }
+
+    .cb-welcome .welcome-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+    }
+
+    .cb-welcome .welcome-icon svg {
+        width: 30px;
+        height: 30px;
+        fill: white;
+    }
+
+    .cb-welcome h3 {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .cb-welcome p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+        .chatbot-window {
+            width: calc(100vw - 16px);
+            height: calc(100vh - 120px);
+            right: 8px;
+            bottom: 90px;
+        }
+    }
+
+    .cb-msg.bot .bubble ul,
+    .cb-msg.bot .bubble ol {
+        margin: 8px 0;
+        padding-left: 22px;
+    }
+
+    .cb-msg.bot .bubble li {
+        margin-bottom: 5px;
+        line-height: 1.6;
+    }
+
+    .cb-msg.bot .bubble strong {
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .cb-msg.bot .bubble em {
+        font-style: italic;
+    }
+
+    .cb-msg.bot .bubble br + br {
+        display: block;
+        content: "";
+        margin-top: 10px;
+    }
+
+    .cb-msg.bot .bubble h2,
+    .cb-msg.bot .bubble h3,
+    .cb-msg.bot .bubble h4 {
+        color: #1a1a1a;
+    }
+</style>
+
+<!-- NÚT TRÒN FLOATING -->
+<button class="chatbot-toggle-btn" id="chatbotToggleBtn" title="Mở chatbot">
+    <svg class="icon-chat" viewBox="0 0 24 24">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+        <path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/>
+    </svg>
+    <svg class="icon-close" viewBox="0 0 24 24">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </svg>
+</button>
+
+<!-- KHUNG CHAT -->
+<div class="chatbot-window" id="chatbotWindow">
+    <!-- HEADER -->
+    <div class="chatbot-header">
+        <div class="chatbot-header-left">
+            <div class="avatar">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+                </svg>
+            </div>
+            <div class="info">
+                <h4>Trợ lý bán hàng</h4>
+                <span>🟢 Online</span>
+            </div>
+        </div>
+        <div class="chatbot-header-actions">
+            <button id="btnToggleHistory" title="Lịch sử chat">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+                </svg>
+            </button>
+            <button id="btnNewChat" title="Chat mới">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="chatbot-body">
+        <!-- SIDEBAR LỊCH SỬ -->
+        <div class="chatbot-sidebar" id="chatbotSidebar">
+            <div class="chatbot-sidebar-header">
+                <span>Lịch sử</span>
+                <button class="btn-new-chat" id="btnNewChatSidebar">+ Mới</button>
+            </div>
+            <ul class="cb-history-list" id="chatHistoryList"></ul>
+        </div>
+        <!-- VÙNG TIN NHẮN -->
+        <div class="chatbot-messages" id="chatbotMessages"></div>
+    </div>
+
+    <!-- Ô NHẬP -->
+    <div class="chatbot-input-area">
+        <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." autocomplete="off">
+        <button class="btn-send" id="btnSend" title="Gửi">
+            <svg viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<!-- JS CHATBOT -->
+<script>
+    (function () {
+        // ===== CẤU HÌNH =====
+        const API_URL = "http://localhost:8000";  // ĐỔI THÀNH ĐỊA CHỈ FASTAPI CỦA BẠN
+        const USER_ID = "{{ current_user.id if current_user.is_authenticated else '' }}";
+        const STORAGE_KEY = USER_ID ? `chatbot_histories_${USER_ID}` : "chatbot_histories_guest";
+        // Cleanup: xóa key cũ không có suffix (chỉ chạy 1 lần)
+        if (localStorage.getItem("chatbot_histories")) {
+            localStorage.removeItem("chatbot_histories");
+        }
+        // ===== ELEMENTS =====
+        const toggleBtn = document.getElementById("chatbotToggleBtn");
+        const chatWindow = document.getElementById("chatbotWindow");
+        const sidebar = document.getElementById("chatbotSidebar");
+        const btnToggleHistory = document.getElementById("btnToggleHistory");
+        const btnNewChat = document.getElementById("btnNewChat");
+        const btnNewChatSidebar = document.getElementById("btnNewChatSidebar");
+        const chatHistoryList = document.getElementById("chatHistoryList");
+        const messagesContainer = document.getElementById("chatbotMessages");
+        const chatInput = document.getElementById("chatInput");
+        const btnSend = document.getElementById("btnSend");
+
+        // ===== STATE =====
+        let conversations = [];
+        let currentConvId = null;
+        let isStreaming = false;
+
+        // ===== WELCOME HTML =====
+        const WELCOME_HTML = `
+        <div class="cb-welcome">
+            <div class="welcome-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
+            </div>
+            <h3>Xin chào! 👋</h3>
+            <p>Tôi là trợ lý bán hàng.<br>Hãy hỏi tôi bất cứ điều gì về sản phẩm!</p>
+        </div>`;
+
+        // ===== LOCAL STORAGE =====
+        function loadFromStorage() {
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (data) conversations = JSON.parse(data);
+            } catch (e) {
+                conversations = [];
+            }
+        }
+
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(conversations));
+        }
+
+        // ===== QUẢN LÝ HỘI THOẠI =====
+        function createNewConversation() {
+            const conv = {
+                id: crypto.randomUUID(),
+                title: "Cuộc trò chuyện mới",
+                messages: []
+            };
+            conversations.unshift(conv);
+            currentConvId = conv.id;
+            saveToStorage();
+            renderHistoryList();
+            renderMessages();
+        }
+
+        function getCurrentConversation() {
+            return conversations.find(c => c.id === currentConvId);
+        }
+
+        function deleteConversation(id) {
+            conversations = conversations.filter(c => c.id !== id);
+            if (currentConvId === id) {
+                if (conversations.length > 0) {
+                    currentConvId = conversations[0].id;
+                } else {
+                    createNewConversation();
+                    return;
+                }
+            }
+            saveToStorage();
+            renderHistoryList();
+            renderMessages();
+
+            // Xóa trên server (fire-and-forget)
+            if (USER_ID) {
+                fetch(API_URL + `/conversations/${id}?user_id=${USER_ID}`, {method: "DELETE"}).catch(() => {
+                });
+            }
+        }
+
+        function switchConversation(id) {
+            currentConvId = id;
+            renderHistoryList();
+            renderMessages();
+        }
+
+        // ===== RENDER SIDEBAR =====
+        function renderHistoryList() {
+            chatHistoryList.innerHTML = "";
+            conversations.forEach(conv => {
+                const li = document.createElement("li");
+                li.classList.toggle("active", conv.id === currentConvId);
+
+                const titleSpan = document.createElement("span");
+                titleSpan.textContent = conv.title;
+                titleSpan.style.cssText = "overflow:hidden;text-overflow:ellipsis;flex:1";
+                li.appendChild(titleSpan);
+
+                const delBtn = document.createElement("button");
+                delBtn.className = "delete-chat";
+                delBtn.innerHTML = "✕";
+                delBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteConversation(conv.id);
+                };
+                li.appendChild(delBtn);
+
+                li.onclick = () => switchConversation(conv.id);
+                chatHistoryList.appendChild(li);
+            });
+        }
+
+        // ===== RENDER TIN NHẮN =====
+        function renderMessages() {
+            const conv = getCurrentConversation();
+            if (!conv || conv.messages.length === 0) {
+                messagesContainer.innerHTML = WELCOME_HTML;
+                return;
+            }
+            messagesContainer.innerHTML = "";
+            conv.messages.forEach(msg => appendMessageBubble(msg.role, msg.content));
+            scrollToBottom();
+        }
+
+        // ===== MARKDOWN PARSER =====
+        function parseMarkdown(text) {
+            let html = text;
+            // Escape HTML to prevent XSS
+            html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            // Headers: ### text
+            html = html.replace(/^### (.+)$/gm, '<h4 style="margin:8px 0 4px;font-size:14px;font-weight:700;">$1</h4>');
+            html = html.replace(/^## (.+)$/gm, '<h3 style="margin:10px 0 4px;font-size:15px;font-weight:700;">$1</h3>');
+            html = html.replace(/^# (.+)$/gm, '<h2 style="margin:12px 0 6px;font-size:16px;font-weight:700;">$1</h2>');
+            // Bold: **text** or __text__
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+            // Italic: *text* or _text_
+            html = html.replace(/(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+            // Unordered list: - item or * item (at line start)
+            html = html.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+            // Ordered list: 1. item, 2. item
+            html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+            // Wrap consecutive <li> not inside <ul> into <ol>
+            html = html.replace(/(?<!<\/ul>)(<li>.*?<\/li>\s*)+/g, function (match) {
+                if (match.includes('<ul>')) return match;
+                return '<ol>' + match + '</ol>';
+            });
+            // Double newlines to paragraph break
+            html = html.replace(/\n{2,}/g, '<br><br>');
+            // Single newlines to <br>
+            html = html.replace(/\n/g, '<br>');
+            // Clean up extra <br> around lists and headings
+            html = html.replace(/<br>\s*<ul>/g, '<ul>');
+            html = html.replace(/<\/ul>\s*<br>/g, '</ul>');
+            html = html.replace(/<br>\s*<ol>/g, '<ol>');
+            html = html.replace(/<\/ol>\s*<br>/g, '</ol>');
+            html = html.replace(/<br>\s*<h([234])/g, '<h$1');
+            html = html.replace(/<\/h([234])>\s*<br>/g, '</h$1>');
+            return html;
+        }
+
+        function appendMessageBubble(role, content) {
+            const div = document.createElement("div");
+            div.className = "cb-msg " + role;
+
+            const avatar = document.createElement("div");
+            avatar.className = "msg-avatar";
+            avatar.textContent = role === "user" ? "🧑" : "🤖";
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            if (role === "bot") {
+                bubble.innerHTML = parseMarkdown(content);
+            } else {
+                bubble.textContent = content;
+            }
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            messagesContainer.appendChild(div);
+        }
+
+        function showTypingIndicator() {
+            const div = document.createElement("div");
+            div.className = "cb-msg bot";
+            div.id = "cbTypingIndicator";
+
+            const avatar = document.createElement("div");
+            avatar.className = "msg-avatar";
+            avatar.textContent = "🤖";
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.innerHTML = '<div class="cb-typing"><span></span><span></span><span></span></div>';
+
+            div.appendChild(avatar);
+            div.appendChild(bubble);
+            messagesContainer.appendChild(div);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const el = document.getElementById("cbTypingIndicator");
+            if (el) el.remove();
+        }
+
+        function scrollToBottom() {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // ===== GỌI API =====
+        async function sendMessage(text) {
+            if (!text.trim() || isStreaming) return;
+
+            const conv = getCurrentConversation();
+            conv.messages.push({role: "user", content: text});
+
+            // Cập nhật tiêu đề nếu là tin nhắn đầu tiên
+            if (conv.messages.filter(m => m.role === "user").length === 1) {
+                conv.title = text.length > 30 ? text.substring(0, 30) + "..." : text;
+            }
+
+            saveToStorage();
+            renderHistoryList();
+            appendMessageBubble("user", text);
+            scrollToBottom();
+
+            chatInput.value = "";
+            isStreaming = true;
+            btnSend.disabled = true;
+            showTypingIndicator();
+
+            try {
+                const response = await fetch(API_URL + "/chat/stream", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        query: text,
+                        session_id: currentConvId,
+                        user_id: USER_ID || null
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Lỗi server: " + response.status);
+                }
+
+                removeTypingIndicator();
+
+                // Tạo bubble bot trống để điền dần token
+                const botMsgDiv = document.createElement("div");
+                botMsgDiv.className = "cb-msg bot";
+
+                const avatar = document.createElement("div");
+                avatar.className = "msg-avatar";
+                avatar.textContent = "🤖";
+
+                const bubble = document.createElement("div");
+                bubble.className = "bubble";
+                bubble.style.whiteSpace = "pre-wrap";
+                bubble.textContent = "";
+
+                botMsgDiv.appendChild(avatar);
+                botMsgDiv.appendChild(bubble);
+                messagesContainer.appendChild(botMsgDiv);
+
+                // Đọc SSE stream từ response body
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder("utf-8");
+                let fullReply = "";
+                let buffer = "";
+
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, {stream: true});
+
+                    // SSE format: "data: <token>\n\n"
+                    // Split on double newline to separate SSE events
+                    const events = buffer.split("\n\n");
+                    buffer = events.pop(); // giữ lại phần chưa hoàn chỉnh
+
+                    for (const event of events) {
+                        if (event.trim() === "") continue;
+                        // Each event may have multiple "data:" lines (for multi-line content)
+                        const dataLines = event.split("\n");
+                        let tokenParts = [];
+                        for (const dl of dataLines) {
+                            if (dl.startsWith("data: ")) {
+                                tokenParts.push(dl.slice(6));
+                            } else if (dl === "data:") {
+                                // empty data line = newline in content
+                                tokenParts.push("");
+                            }
+                        }
+                        const token = tokenParts.join("\n");
+                        fullReply += token;
+                        bubble.textContent = fullReply;
+                        scrollToBottom();
+                    }
+                }
+
+                // Xử lý phần buffer còn sót
+                if (buffer.trim() !== "") {
+                    const dataLines = buffer.split("\n");
+                    let tokenParts = [];
+                    for (const dl of dataLines) {
+                        if (dl.startsWith("data: ")) {
+                            tokenParts.push(dl.slice(6));
+                        } else if (dl === "data:") {
+                            tokenParts.push("");
+                        }
+                    }
+                    fullReply += tokenParts.join("\n");
+                }
+
+                // Render final message as formatted HTML
+                bubble.style.whiteSpace = "normal";
+                bubble.innerHTML = parseMarkdown(fullReply);
+
+                // Lưu câu trả lời hoàn chỉnh
+                conv.messages.push({role: "bot", content: fullReply});
+                saveToStorage();
+                scrollToBottom()
+
+            } catch (error) {
+                removeTypingIndicator();
+                const errorMsg = "⚠️ Lỗi kết nối: " + error.message;
+                appendMessageBubble("bot", errorMsg);
+                conv.messages.push({role: "bot", content: errorMsg});
+                saveToStorage();
+            } finally {
+                isStreaming = false;
+                btnSend.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+        // ===== SỰ KIỆN =====
+        toggleBtn.addEventListener("click", () => {
+            const isOpen = chatWindow.classList.toggle("open");
+            toggleBtn.classList.toggle("active", isOpen);
+            if (isOpen) chatInput.focus();
+        });
+
+        btnToggleHistory.addEventListener("click", () => {
+            sidebar.classList.toggle("open");
+        });
+
+        btnNewChat.addEventListener("click", createNewConversation);
+        btnNewChatSidebar.addEventListener("click", createNewConversation);
+
+        btnSend.addEventListener("click", () => {
+            sendMessage(chatInput.value);
+        });
+
+        chatInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(chatInput.value);
+            }
+        });
+
+        // ===== KHỞI TẠO =====
+        loadFromStorage();
+        if (conversations.length === 0) {
+            createNewConversation();
+        } else {
+            currentConvId = conversations[0].id;
+        }
+        renderHistoryList();
+        renderMessages();
+
+        // Load lịch sử từ MongoDB khi user đã đăng nhập
+        async function loadHistoryFromServer() {
+            if (!USER_ID) return;
+            try {
+                const resp = await fetch(API_URL + `/conversations?user_id=${USER_ID}&limit=50`);
+                if (!resp.ok) return;
+
+                const serverConvs = await resp.json();
+                const localIds = new Set(conversations.map(c => c.id));
+
+                for (const sc of serverConvs) {
+                    if (!localIds.has(sc.session_id)) {
+                        // Load chi tiết conversation từ server
+                        const detailResp = await fetch(
+                            API_URL + `/conversations/${sc.session_id}?user_id=${USER_ID}`
+                        );
+                        if (detailResp.ok) {
+                            const detail = await detailResp.json();
+                            conversations.push({
+                                id: detail.session_id,
+                                title: detail.title || "Cuộc trò chuyện",
+                                messages: (detail.messages || []).map(m => ({
+                                    role: m.role === "assistant" ? "bot" : m.role,
+                                    content: m.content
+                                }))
+                            });
+                        }
+                    }
+                }
+
+                saveToStorage();
+                renderHistoryList();
+            } catch (e) {
+                console.warn("Cannot load history from server:", e);
+            }
+        }
+
+        loadHistoryFromServer();
+    })();
+</script>
+<!-- ===== CHATBOT WIDGET END ===== -->
+
+</body>
 </html>

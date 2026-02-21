@@ -57,7 +57,7 @@ README.md
    ```
 3. **Cài đặt thư viện:**
    ```bash
-   pip install -r requirements.txt
+   pip install -r web_requirements.txt
    ```
 4. **Khởi tạo cơ sở dữ liệu:**
    ```bash

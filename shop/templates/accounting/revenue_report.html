@@ -30,7 +30,7 @@
     <div class="card mb-4">
         <div class="card-body">
             <form method="POST" class="row g-3 align-items-end">
-                {{ form.csrf_token }}
+                {{ form.hidden_tag() }}
                 <div class="col-md-3">
                     {{ form.start_date.label(class="form-label") }}
                     {{ form.start_date(class="form-control") }}

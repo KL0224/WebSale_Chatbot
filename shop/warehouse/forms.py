@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, IntegerField, FloatField, SelectField, DateField, HiddenField
+from wtforms import StringField, TextAreaField, IntegerField, FloatField, SelectField, DateField, HiddenField, SubmitField
 from wtforms.validators import DataRequired, Length, NumberRange, Optional
 from flask_wtf.file import FileField, FileAllowed
 
@@ -13,6 +13,7 @@ class WarehouseForm(FlaskForm):
         ('active', 'Hoạt động'),
         ('inactive', 'Không hoạt động'),
     ], validators=[DataRequired()])
+    submit = SubmitField('Lưu kho')
 
 class InboundReceiptForm(FlaskForm):
     receipt_number = StringField('Số phiếu nhập', validators=[DataRequired(), Length(min=3, max=50, message='Số phiếu nhập phải từ 3 đến 50 ký tự')])
@@ -25,6 +26,7 @@ class InboundReceiptForm(FlaskForm):
         ('completed', 'Hoàn thành'),
         ('cancelled', 'Đã hủy')
     ], default='pending')
+    submit = SubmitField("Lưu phiếu nhập")
 
 class InboundReceiptDetailForm(FlaskForm):
     product_id = SelectField('Sản phẩm', coerce=int, validators=[DataRequired()])
@@ -43,6 +45,7 @@ class OutboundReceiptForm(FlaskForm):
         ('completed', 'Hoàn thành'),
         ('cancelled', 'Đã hủy')
     ], default='pending')
+    submit = SubmitField("Lưu phiếu xuất")
 
 class OutboundReceiptDetailForm(FlaskForm):
     product_id = SelectField('Sản phẩm', coerce=int, validators=[DataRequired()])

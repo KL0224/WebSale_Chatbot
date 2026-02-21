@@ -4,14 +4,14 @@ from flask_bcrypt import Bcrypt
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 import os
 from flask_msearch import Search
-from flask_login import LoginManager, login_manager
+from flask_login import LoginManager
 from flask_migrate import Migrate
 
 # Thư mục hiện tại
 basedir = os.path.abspath(os.path.dirname(__file__))
 # Khởi tạo Flask app
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:<passwork>@localhost/shopdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Pak123!!!@localhost/shopdb' # Database local
 app.config['SECRET_KEY'] = 'fkshfkhwoe8ww0590fmw050'
 app.config['UPLOADED_PHOTOS_DEST'] = os.path.join(basedir, 'static/images/products')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # 16MB Limit

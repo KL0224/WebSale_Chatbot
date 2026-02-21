@@ -1,0 +1,15 @@
+pandas
+sentence-transformers
+qdrant-client
+langchain
+langchain-groq
+langchain_community
+langchain_core
+transformers==4.44.2
+fastapi
+redis
+pymongo
+ragas
+flagembedding
+
+

@@ -28,7 +28,7 @@
                         {% endwith %}
 
                         <form method="post" autocomplete="off">
-                            {{ form.csrf_token }}
+                            {{ form.hidden_tag() }}
                             <div class="mb-3">
                                 {{ form.username.label(class="form-label fw-semibold") }}
                                 {{ form.username(class="form-control", placeholder="Tên nhân viên") }}

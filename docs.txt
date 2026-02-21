@@ -13,3 +13,19 @@
 - Sau khi tải về, giải nén và copy đường dẫn đến thư mục bin
 - Sau đó đưa đường dẫn vào biến môi trường PATH
 - Kiểm tra: mở cmd gõ lệnh wkhtmltopdf --version
+
+4. Kế hoạch xây dựng chatbot RAG phục vụ cho việc tư vấn sản phẩm và hỗ trợ khách hàng:
+- Sử dụng vector database để lưu trữ các tài liệu và thông tin sản phẩm: Qdrant.
+- Sử dụng mô hình embedding để chuyển đổi văn bản thành vector: bkai-foundation-models/vietnamese-bi-encoder (framework: sentence-transformers).
+- Sử dụng framework Flask để xây dựng API cho chatbot.
+- Sử dụng framework langchain để quản lý các tác vụ và luồng làm việc của chatbot.
+- Sử dụng API LLM để tạo phản hồi tự động cho người dùng dựa trên các vector đã lưu trữ: Groq.
+
+5. Các bước thực hiện cài đặt database Qdrant trên máy local bằng docker:
+1. Tải docker về máy tính và cài đặt.
+2. Mở terminal và chạy lệnh:
+    - docker pull qdrant/qdrant
+    - docker run -p 6333:6333 -p 6334:6334 -v "$(pwd)/qdrant_storage:/qdrant/storage:z" qdrant/qdrant # (dữ liệu sẽ được lưu trong thư mục qdrant_storage và nó là volume của docker)
+3. Kiểm tra qdrant đã chạy chưa bằng cách mở trình duyệt và truy cập vào địa chỉ: http://localhost:6333 or docker ps trong terminal.
+
+7. Cách tải underthesea cho

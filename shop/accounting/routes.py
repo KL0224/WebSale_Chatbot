@@ -101,7 +101,7 @@ def revenue_report():
     orders = []
     stats = None
 
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         start_time = form.start_date.data
         end_time = form.end_date.data
         report_type = form.report_type.data

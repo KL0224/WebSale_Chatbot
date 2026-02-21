@@ -1,7 +1,7 @@
 from flask import redirect, render_template, url_for, request, flash, session, current_app
 from shop import app, db, photos, search
 from .models import Brand, Category, AddProduct
-from .forms import AddProducts
+from .forms import AddProductForm
 import secrets, os  # Băm ảnh để không trùng lặp
 from shop.models import User, Role
 from shop.customers.forms import ReviewForm
@@ -193,89 +193,154 @@ def addproduct():
     if 'email' not in session:
         flash('Vui lòng đăng nhập để truy cập trang!', 'danger')
         return redirect(url_for('login'))
+
     brands = Brand.query.all()
     categories = Category.query.all()
-    form = AddProducts(request.form)
-    if request.method == 'POST':
+
+    form = AddProductForm()
+
+    if form.validate_on_submit():
         name = form.name.data
         price = form.price.data
         discount = form.discount.data
         stock = form.stock.data
         colors = form.colors.data
-        brand = request.form.get(
-            'brand')  # Syntax bởi vì trong models AddProduct không có brand and category mà là liên kêt
-        category = request.form.get('category')
         description = form.description.data
-        image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + '.')
-        image_2 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + '.')
-        image_3 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + '.')
-        addpro = AddProduct(name=name, price=price, discount=discount, stock=stock, colors=colors, brand_id=brand,
-                            category_id=category, description=description, image_1=image_1, image_2=image_2,
-                            image_3=image_3)
+        brand = request.form.get('brand')
+        category = request.form.get('category')
+
+        image_1 = None
+        image_2 = None
+        image_3 = None
+        if form.image_1.data:
+            image_1 = photos.save(
+                form.image_1.data,
+                name=secrets.token_hex(10) + '.'
+            )
+
+        if form.image_2.data:
+            image_2 = photos.save(
+                form.image_2.data,
+                name=secrets.token_hex(10) + '.'
+            )
+
+        if form.image_3.data:
+            image_3 = photos.save(
+                form.image_3.data,
+                name=secrets.token_hex(10) + '.'
+            )
+
+        addpro = AddProduct(
+            name=name,
+            price=price,
+            discount=discount,
+            stock=stock,
+            colors=colors,
+            brand_id=brand,
+            category_id=category,
+            description=description,
+            image_1=image_1,
+            image_2=image_2,
+            image_3=image_3
+        )
+
         db.session.add(addpro)
         db.session.commit()
+
         flash(f'Sản phẩm {name} được thêm thành công!', 'success')
         return redirect(url_for('addproduct'))
 
-    return render_template('products/addproduct.html', title='Thêm sản phẩm', form=form, brands=brands,
-                           categories=categories)
-
+    return render_template(
+        'products/addproduct.html',
+        title='Thêm sản phẩm',
+        form=form,
+        brands=brands,
+        categories=categories
+    )
 @app.route('/updateproduct/<int:id>', methods=['GET', 'POST'])
 @role_required(['admin', 'sale'])
 def updateproduct(id):
     if 'email' not in session:
         flash('Vui lòng đăng nhập để truy cập trang!', 'danger')
         return redirect(url_for('login'))
+
+    product = AddProduct.query.get_or_404(id)
     brands = Brand.query.all()
     categories = Category.query.all()
-    product = AddProduct.query.get_or_404(id)
-    brand = request.form.get('brand')
-    category = request.form.get('category')
-    form = AddProducts(request.form)
-    if request.method == 'POST':
+
+    form = AddProductForm(obj=product)
+
+    if form.validate_on_submit():
         product.name = form.name.data
         product.price = form.price.data
         product.discount = form.discount.data
         product.stock = form.stock.data
-        product.brand_id = brand
-        product.category_id = category
-        product.color = form.colors.data
+        product.colors = form.colors.data
         product.description = form.description.data
-        if request.files.get('image_1'):
-            try:
-                os.unlink(os.path.join(current_app.root_path, 'static/images/' + product.image_1))
-                product.image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + '.')
-            except:
-                product.image_1 = photos.save(request.files.get('image_1'), name=secrets.token_hex(10) + '.')
 
-        if request.files.get('image_2'):
-            try:
-                os.unlink(os.path.join(current_app.root_path, 'static/images/' + product.image_2))
-                product.image_1 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + '.')
-            except:
-                product.image_1 = photos.save(request.files.get('image_2'), name=secrets.token_hex(10) + '.')
+        product.brand_id = request.form.get('brand')
+        product.category_id = request.form.get('category')
 
-        if request.files.get('image_3'):
-            try:
-                os.unlink(os.path.join(current_app.root_path, 'static/images/' + product.image_3))
-                product.image_1 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + '.')
-            except:
-                product.image_1 = photos.save(request.files.get('image_3'), name=secrets.token_hex(10) + '.')
+        # ===== IMAGE 1 =====
+        if form.image_1.data:
+            if product.image_1:
+                try:
+                    os.unlink(os.path.join(
+                        current_app.root_path,
+                        'static/images/' + product.image_1
+                    ))
+                except Exception:
+                    pass
 
-        db.session.add(product)
-        flash(f'Sản phẩm {product.name} được cập nhật thành công!', 'success')
+            product.image_1 = photos.save(
+                form.image_1.data,
+                name=secrets.token_hex(10) + '.'
+            )
+
+        # ===== IMAGE 2 =====
+        if form.image_2.data:
+            if product.image_2:
+                try:
+                    os.unlink(os.path.join(
+                        current_app.root_path,
+                        'static/images/' + product.image_2
+                    ))
+                except Exception:
+                    pass
+
+            product.image_2 = photos.save(
+                form.image_2.data,
+                name=secrets.token_hex(10) + '.'
+            )
+
+        # ===== IMAGE 3 =====
+        if form.image_3.data:
+            if product.image_3:
+                try:
+                    os.unlink(os.path.join(
+                        current_app.root_path,
+                        'static/images/' + product.image_3
+                    ))
+                except Exception:
+                    pass
+
+            product.image_3 = photos.save(
+                form.image_3.data,
+                name=secrets.token_hex(10) + '.'
+            )
+
         db.session.commit()
-        return redirect(request.referrer)
+        flash(f'Sản phẩm {product.name} được cập nhật thành công!', 'success')
+        return redirect(url_for('updateproduct', id=id))
 
-    form.name.data = product.name
-    form.price.data = product.price
-    form.description.data = product.description
-    form.discount.data = product.discount
-    form.stock.data = product.stock
-    form.colors.data = product.colors
-
-    return render_template('products/updateproduct.html', title='Cập nhật thành công', form=form, brands=brands,
-                           categories=categories, product=product)
+    return render_template(
+        'products/updateproduct.html',
+        title='Cập nhật sản phẩm',
+        form=form,
+        brands=brands,
+        categories=categories,
+        product=product
+    )
 
 @app.route('/deleteproduct/<int:id>', methods=['POST'])
 @role_required(['admin', 'sale'])

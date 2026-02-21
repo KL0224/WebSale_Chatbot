@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # Qdrant - Vector Database (đã có dữ liệu, giữ nguyên volume)
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    ports:
+      - "6333:6333"   # REST API
+      - "6334:6334"   # gRPC
+    volumes:
+      - ./chatbot/qdrant_storage:/qdrant/storage
+    restart: unless-stopped
+
+  # Redis - Short-term Memory (lưu hội thoại ngắn hạn)
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+  # MongoDB - Long-term History (lưu lịch sử hội thoại)
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  mongo_data:
+

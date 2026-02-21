@@ -5,3 +5,14 @@ instance
 tgdd-img
 .venv
 .idea
+chatbot/output_csvs
+chatbot/.venv
+chatbot/api_chatbot/.env
+chatbot/evaluation/rag_evaluation_dataset.csv
+chatbot/evaluation/questions.txt
+chatbot/prepare_database/chunks_product_bge.jsonl
+chatbot/prepare_database/policy.jsonl
+chatbot/prepare_database/chunks_policy_embedding.pkl
+chatbot/prepare_database/chunks_product_bge_embedding.pkl
+chatbot/prepare_database/fpt_products_final.csv
+/chatbot/qdrant_storage/

@@ -30,7 +30,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="{{ form.receipt_number.id }}" class="form-label">{{ form.receipt_number.label }}</label>
+                                    {{ form.receipt_number.label(class="form-label") }}
                                     {{ form.receipt_number(class="form-control") }}
                                     {% if form.receipt_number.errors %}
                                     <div class="text-danger">
@@ -43,8 +43,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="{{ form.receipt_date.id }}" class="form-label">{{ form.receipt_date.label }}</label>
-                                    {{ form.receipt_date(class="form-control", type="date") }}
+                                    {{ form.receipt_date.label(class="form-label") }}
+                                    {{ form.receipt_date(class="form-control") }}
                                     {% if form.receipt_date.errors %}
                                     <div class="text-danger">
                                         {% for error in form.receipt_date.errors %}
@@ -218,7 +218,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-4">
-                            <button type="submit" class="btn btn-primary">Lưu phiếu xuất</button>
+                            {{ form.submit(class="btn btn-primary") }}
                             <a href="{{ url_for('outbound_receipt') }}" class="btn btn-secondary">Hủy</a>
                         </div>
                     </form>

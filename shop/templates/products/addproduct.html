@@ -2,121 +2,116 @@
 {% set show_footer = false %}
 
 {% block title %}
-  {% if title %} {{ title }} {% else %} Thêm Sản Phẩm {% endif %}
+    {% if title %} {{ title }} {% else %} Thêm Sản Phẩm {% endif %}
 {% endblock title %}
 
 {% block content %}
-  {% include '_messages.html' %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/addproduct.css') }}">
-<div class="floating-elements">
-    <div class="floating-element" style="width: 100px; height: 100px; top: 20%; left: 10%;"></div>
-    <div class="floating-element" style="width: 150px; height: 150px; top: 70%; left: 80%; animation-delay: -5s;"></div>
-    <div class="floating-element" style="width: 60px; height: 60px; top: 40%; left: 90%; animation-delay: -10s;"></div>
-</div>
+    {% include '_messages.html' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/addproduct.css') }}">
+    <div class="floating-elements">
+        <div class="floating-element" style="width: 100px; height: 100px; top: 20%; left: 10%;"></div>
+        <div class="floating-element"
+             style="width: 150px; height: 150px; top: 70%; left: 80%; animation-delay: -5s;"></div>
+        <div class="floating-element"
+             style="width: 60px; height: 60px; top: 40%; left: 90%; animation-delay: -10s;"></div>
+    </div>
 
-<div class="container form-container">
-    <div class="row justify-content-center">
-        <div class="col-md-10 col-lg-8">
-            <div class="mb-4">
-                <a href="{{ url_for('admin') if current_user.role.name == 'admin' else url_for('sales') }}" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-2"></i> Quay lại
-                </a>
-            </div>
-            <div class="form-card">
-                <div class="form-header">
-                    <i class="bi bi-box-seam-fill"></i>
-                    <h2>Thêm Sản Phẩm Mới</h2>
+    <div class="container form-container">
+        <div class="row justify-content-center">
+            <div class="col-md-10 col-lg-8">
+                <div class="mb-4">
+                    <a href="{{ url_for('admin') if current_user.role.name == 'admin' else url_for('sales') }}"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i> Quay lại
+                    </a>
                 </div>
+                <div class="form-card">
+                    <div class="form-header">
+                        <i class="bi bi-box-seam-fill"></i>
+                        <h2>Thêm Sản Phẩm Mới</h2>
+                    </div>
 
-                <div class="form-body">
-                    {% from "_formhelpers.html" import render_field %}
+                    <div class="form-body">
+                        {% from "_formhelpers.html" import render_field %}
 
-                    <form method="post" enctype="multipart/form-data">
-                        <!-- Thông tin cơ bản -->
-                        <div class="mb-4">
-                            <label class="form-label"></label>
-                            {{ render_field(form.name, class_="form-control", placeholder="Nhập tên sản phẩm") }}
-                        </div>
+                        <form method="post" enctype="multipart/form-data">
+                            {{ form.hidden_tag() }} {# ✅ CSRF #}
 
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-4">
-                                <label class="form-label"></label>
-                                {{ render_field(form.price, class_="form-control", placeholder="VNĐ") }}
+                            <!-- Thông tin cơ bản -->
+                            <div class="mb-4">
+                                {{ render_field(form.name, class_="form-control", placeholder="Nhập tên sản phẩm") }}
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label"></label>
-                                {{ render_field(form.discount, class_="form-control", placeholder="0-100") }}
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label"></label>
-                                {{ render_field(form.stock, class_="form-control", placeholder="Tồn kho") }}
-                            </div>
-                        </div>
 
-                        <!-- Phân loại -->
-                        <div class="row g-3 mb-4">
-                            <div class="col-md-6">
-                                <label class="form-label">Thương Hiệu</label>
-                                <select name="brand" id="brand" class="form-select" required>
-                                    <option value="">Chọn thương hiệu</option>
-                                    {% for brand in brands %}
-                                        <option value="{{ brand.id }}">{{ brand.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Danh Mục</label>
-                                <select name="category" id="category" class="form-select" required>
-                                    <option value="">Chọn danh mục</option>
-                                    {% for category in categories %}
-                                        <option value="{{ category.id }}">{{ category.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Chi tiết sản phẩm -->
-                        <div class="mb-4">
-                            <label class="form-label"></label>
-                            {{ render_field(form.description, class_="form-control", placeholder="Mô tả chi tiết sản phẩm...", rows=6) }}
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label"></label>
-                            {{ render_field(form.colors, class_="form-control", placeholder="Ví dụ: Đỏ,Xanh,Vàng") }}
-                        </div>
-
-                        <!-- Hình ảnh -->
-                        <div class="mb-4">
-                            <label class="form-label mb-3">Hình Ảnh Sản Phẩm</label>
-                            <div class="row g-3">
+                            <div class="row g-3 mb-4">
                                 <div class="col-md-4">
-                                    <label class="form-label"></label>
-                                    {{ render_field(form.image_1, class_="form-control", required=True) }}
+                                    {{ render_field(form.price, class_="form-control", placeholder="VNĐ") }}
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label"></label>
-                                    {{ render_field(form.image_2, class_="form-control") }}
+                                    {{ render_field(form.discount, class_="form-control", placeholder="0-100") }}
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label"></label>
-                                    {{ render_field(form.image_3, class_="form-control") }}
+                                    {{ render_field(form.stock, class_="form-control", placeholder="Tồn kho") }}
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Nút submit -->
-                        <div class="mt-4">
-                            <button type="submit" class="submit-btn">
-                                <i class="bi bi-upload me-2"></i> Thêm Sản Phẩm
-                            </button>
-                        </div>
-                    </form>
+                            <!-- Phân loại -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Thương Hiệu</label>
+                                    <select name="brand" class="form-select" required>
+                                        <option value="">Chọn thương hiệu</option>
+                                        {% for brand in brands %}
+                                            <option value="{{ brand.id }}">{{ brand.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Danh Mục</label>
+                                    <select name="category" class="form-select" required>
+                                        <option value="">Chọn danh mục</option>
+                                        {% for category in categories %}
+                                            <option value="{{ category.id }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Chi tiết -->
+                            <div class="mb-4">
+                                {{ render_field(form.description, class_="form-control", rows=6) }}
+                            </div>
+
+                            <div class="mb-4">
+                                {{ render_field(form.colors, class_="form-control", placeholder="Đỏ,Xanh,Vàng") }}
+                            </div>
+
+                            <!-- Hình ảnh -->
+                            <div class="mb-4">
+                                <label class="form-label mb-3">Hình Ảnh Sản Phẩm</label>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        {{ render_field(form.image_1, class_="form-control") }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ render_field(form.image_2, class_="form-control") }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ render_field(form.image_3, class_="form-control") }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="mt-4">
+                                {{ form.submit(class="submit-btn") }}
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script="{{ url_for('static', filename='js/addproduct.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/addproduct.js') }}"></script>
 {% endblock content %}

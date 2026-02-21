@@ -30,82 +30,82 @@ def categories():
     categories = Category.query.order_by(Category.id.desc()).all()
     return render_template('admin/brand.html', title='Categories Page', categories=categories)
 
-@app.route('/admin/register', methods=['GET', 'POST'])
-def admin_register():
-    """
-    Đăng ký tài khoản admin. Nếu chưa có admin thì có thể tạo tài khoản admin đầu tiên
-    không yêu cầu quyền. Nếu tạo tài khoản admin từ lần 2 thì phải có quyền admin.
-    :return:
-    """
-    # Kiểm tra đã có admin hay chưa
-    admin_role = Role.query.filter_by(name='admin').first()
-    if admin_role:
-        admin_exists = User.query.filter_by(role_id=admin_role.id).first()
-    else:
-        admin_exists = False
-        admin_role = Role(name='admin')
-        db.session.add(admin_role)
-        db.session.commit()
-
-    if admin_exists:
-        # Nếu đã có admin mà chưa đăng nhập thì yêu cầu đăng nhập
-        if not current_user.is_authenticated or current_user.role.name != 'admin':
-            flash('Admin đã tồn tại, vui lòng đăng nhập!.', 'danger')
-            return redirect(url_for('login'))
-
-    form = StaffRegistrationForm(request.form)
-    # Không cần thiết lập choices cho role_id vì nó sẽ được gán tự động
-    if request.method == 'POST':
-        # Loại bỏ role_id khỏi xác thực biểu mẫu
-        form.role_id.data = admin_role.id  # Gán role_id tự động
-        if form.validate():
-            # Kiểm tra email hay phone đã nhập chưa
-            email = form.email.data
-            phone = form.phone.data
-            if not email or not phone:
-                flash('Email và số điện thoại phải được nhập', 'danger')
-                return redirect(url_for('admin_register'))
-
-            # Kiểm tra email đã tồn tại chưa
-            user = User.query.filter_by(email=form.email.data).first()
-            if user:
-                flash(f'Cảnh báo! Email {form.email.data} đã tồn tại!', 'danger')
-                return redirect(url_for('admin_register'))
-
-            # Kiểm tra phone đã được sử dụng chưa
-            phone_user = User.query.filter_by(phone=form.phone.data).first()
-            if phone_user:
-                flash(f'Cảnh báo! Số điện thoại {form.phone.data} đã tồn tại', 'danger')
-                return redirect(url_for('admin_register'))
-
-            hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-            admin = Staff(
-                username=form.username.data,
-                email=form.email.data,
-                phone=phone,
-                password=hashed_password,
-                position=form.position.data,
-                role_id=admin_role.id  # Gán role_id trực tiếp
-            )
-            db.session.add(admin)
-            db.session.commit()
-            flash(f'Chào mừng {form.username.data}! Tài khoản admin đã được tạo thành công.', 'success')
-            return redirect(url_for('login'))
-        else:
-            # Hiển thị lỗi xác thực chi tiết
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash(f'Lỗi ở trường {field}: {error}', 'danger')
-
-    return render_template('admin/register.html', form=form, title='Đăng ký Admin')
+# @app.route('/admin/register', methods=['GET', 'POST'])
+# def admin_register():
+#     """
+#     Đăng ký tài khoản admin. Nếu chưa có admin thì có thể tạo tài khoản admin đầu tiên
+#     không yêu cầu quyền. Nếu tạo tài khoản admin từ lần 2 thì phải có quyền admin.
+#     :return:
+#     """
+#     # Kiểm tra đã có admin hay chưa
+#     admin_role = Role.query.filter_by(name='admin').first()
+#     if admin_role:
+#         admin_exists = User.query.filter_by(role_id=admin_role.id).first()
+#     else:
+#         admin_exists = False
+#         admin_role = Role(name='admin')
+#         db.session.add(admin_role)
+#         db.session.commit()
+#
+#     if admin_exists:
+#         # Nếu đã có admin mà chưa đăng nhập thì yêu cầu đăng nhập
+#         if not current_user.is_authenticated or current_user.role.name != 'admin':
+#             flash('Admin đã tồn tại, vui lòng đăng nhập!.', 'danger')
+#             return redirect(url_for('login'))
+#
+#     form = StaffRegistrationForm()
+#     # Không cần thiết lập choices cho role_id vì nó sẽ được gán tự động
+#     if request.method == 'POST':
+#         # Loại bỏ role_id khỏi xác thực biểu mẫu
+#         form.role_id.data = admin_role.id  # Gán role_id tự động
+#         if form.validate():
+#             # Kiểm tra email hay phone đã nhập chưa
+#             email = form.email.data
+#             phone = form.phone.data
+#             if not email or not phone:
+#                 flash('Email và số điện thoại phải được nhập', 'danger')
+#                 return redirect(url_for('admin_register'))
+#
+#             # Kiểm tra email đã tồn tại chưa
+#             user = User.query.filter_by(email=form.email.data).first()
+#             if user:
+#                 flash(f'Cảnh báo! Email {form.email.data} đã tồn tại!', 'danger')
+#                 return redirect(url_for('admin_register'))
+#
+#             # Kiểm tra phone đã được sử dụng chưa
+#             phone_user = User.query.filter_by(phone=form.phone.data).first()
+#             if phone_user:
+#                 flash(f'Cảnh báo! Số điện thoại {form.phone.data} đã tồn tại', 'danger')
+#                 return redirect(url_for('admin_register'))
+#
+#             hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+#             admin = Staff(
+#                 username=form.username.data,
+#                 email=form.email.data,
+#                 phone=phone,
+#                 password=hashed_password,
+#                 position=form.position.data,
+#                 role_id=admin_role.id  # Gán role_id trực tiếp
+#             )
+#             db.session.add(admin)
+#             db.session.commit()
+#             flash(f'Chào mừng {form.username.data}! Tài khoản admin đã được tạo thành công.', 'success')
+#             return redirect(url_for('login'))
+#         else:
+#             # Hiển thị lỗi xác thực chi tiết
+#             for field, errors in form.errors.items():
+#                 for error in errors:
+#                     flash(f'Lỗi ở trường {field}: {error}', 'danger')
+#
+#     return render_template('admin/register.html', form=form, title='Đăng ký Admin')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm(request.form)
-    if request.method == 'POST' and form.validate():
+    form = LoginForm()
+    if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
+            login_user(user, remember=form.remember.data)
             session['email'] = user.email
             session['role'] = user.role.name
 
@@ -134,8 +134,8 @@ def change_password():
     if 'email' not in session:
         flash('Vui lòng đăng nhập để truy cập trang này', 'danger')
         return redirect(url_for('login'))
-    form = ChangePasswordForm(request.form)
-    if request.method == 'POST' and form.validate():
+    form = ChangePasswordForm()
+    if form.validate_on_submit():
         user = User.query.filter_by(email = session['email']).first()
         if user and bcrypt.check_password_hash(user.password, form.old_password.data):
             hashed_password = bcrypt.generate_password_hash(form.new_password.data)
@@ -172,9 +172,9 @@ def roles():
 @app.route('/addrole', methods=['GET', 'POST'])
 @role_required(['admin'])
 def add_role():
-    form = RoleForm(request.form)
+    form = RoleForm()
     form.submit.label.text = 'Thêm vai trò'
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         # Check if role already exists
         role = Role.query.filter_by(name=form.name.data).first()
         if role:
@@ -197,15 +197,10 @@ def add_role():
 @role_required(['admin'])
 def update_role(id):
     role = Role.query.get_or_404(id)
-    form = RoleForm(request.form)
+    form = RoleForm(obj=role)
     form.submit.label.text = 'Cập nhật vai trò'
 
-    # For GET requests, populate form with existing data
-    if request.method == 'GET':
-        form.name.data = role.name
-        form.description.data = role.description
-
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         # Check if role name already exists with another role
         existing_role = Role.query.filter_by(name=form.name.data).first()
         if existing_role and existing_role.id != id:
@@ -247,10 +242,10 @@ def staff():
 def add_staff():
     roles = Role.query.all()
     # Redundant session check removed as role_required decorator already handles this
-    form = StaffRegistrationForm(request.form)
+    form = StaffRegistrationForm()
     form.submit.label.text = 'Thêm nhân viên'
     form.role_id.choices = [(role.id, role.name) for role in roles]
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         # Check if staff with this email already exists
         staff = Staff.query.filter_by(email=form.email.data).first()
         if staff:
@@ -288,23 +283,15 @@ def add_staff():
 @role_required(['admin'])
 def update_staff(id):
     staff = Staff.query.get_or_404(id)
-    form = StaffRegistrationForm(request.form)
+    form = StaffRegistrationForm(obj=staff)
     form.submit.label.text = 'Cập nhật thông tin'
     roles = Role.query.all()
     form.role_id.choices = [(role.id, role.name) for role in roles]
-    # For GET requests, populate form with existing data
-    if request.method == 'GET':
-        form.username.data = staff.username
-        form.email.data = staff.email
-        form.phone.data = staff.phone
-        form.position.data = staff.position
-        form.role_id.data = staff.role_id
 
-    if request.method == 'POST':
-        form.password.validators = []
-        form.confirm.validators = []
+    form.password.validators = []
+    form.confirm.validators = []
     # If the form is submitted
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         # Check if email already exists with another staff
         existing_staff = Staff.query.filter_by(email=form.email.data).first()
         if existing_staff and existing_staff.id != id:
@@ -354,7 +341,7 @@ def customers_manager():
 def add_customer():
     form = CustomerRegisterForm()
     form.submit.label.text = 'Thêm khách hàng'
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         # Check if user with this email already exists
         user_email = User.query.filter_by(email=form.email.data).first()
         if user_email:
