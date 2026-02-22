@@ -217,7 +217,7 @@ def main():
     # chunker_markdown.save_chunk('chunking/policy.jsonl')
 
     chunker = ChunkData()
-    chunker.semantic_chunking("chunking/fpt_products_final.csv")
+    chunker.semantic_chunking("chunking/products.csv")
     chunker.save_chunk("chunking/chunks_product_bge.jsonl")
 
 if __name__ == '__main__':

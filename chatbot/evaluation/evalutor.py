@@ -1,61 +1,171 @@
-import pandas as pd
-import ast
 import os
-from datasets import Dataset
-from ragas import evaluate
-from ragas.metrics import faithfulness, answer_relevance, context_precision
-from langchain_groq import ChatGroq
+import json
 from pathlib import Path
+
+import pandas as pd
+from datasets import Dataset
 from dotenv import load_dotenv
 
-# 1. Cấu hình LLM làm "Giám khảo" (Judge)
-BASE_DIR = Path(__file__).resolve().parent
-ENV_PATH = BASE_DIR / ".env"
-load_dotenv(dotenv_path=ENV_PATH)
-api_groq_key = os.getenv("API_GROQ_KEY")
-judge_llm = ChatGroq(
-    model="llama-3.3-70b-versatile",
-    temperature=0
-)
+from langchain_groq.chat_models import ChatGroq
+from langchain_core.embeddings import Embeddings
 
+from ragas import evaluate
+from ragas.metrics import faithfulness, answer_relevancy
+
+from FlagEmbedding import BGEM3FlagModel
+
+
+# =========================
+# Embedding Wrapper
+# =========================
+class M3Embedder(Embeddings):
+    def __init__(self, model: BGEM3FlagModel):
+        self.model = model
+
+    def embed_query(self, text: str) -> list[float]:
+        out = self.model.encode([text])
+        v = out[0]
+        return v.tolist() if hasattr(v, "tolist") else list(v)
+
+    def embed_documents(self, texts: list[str]) -> list[list[float]]:
+        out = self.model.encode(texts)
+        return [v.tolist() if hasattr(v, "tolist") else list(v) for v in out]
+
+
+# =========================
+# Safe context parser
+# =========================
+def safe_parse_context(x):
+    """
+    Parse contexts safely from CSV.
+    Accepts:
+    - JSON list
+    - Python list string
+    - Already list
+    """
+    if isinstance(x, list):
+        return x
+
+    if not isinstance(x, str):
+        return []
+
+    x = x.strip()
+    if not x:
+        return []
+
+    # Try JSON
+    try:
+        data = json.loads(x)
+        if isinstance(data, list):
+            return data
+    except:
+        pass
+
+    # Try python literal manually
+    if x.startswith("[") and x.endswith("]"):
+        try:
+            # replace smart quotes
+            x2 = x.replace("“", '"').replace("”", '"').replace("’", "'")
+            data = eval(x2, {"__builtins__": None}, {})
+            if isinstance(data, list):
+                return data
+        except:
+            return []
+
+    return []
+
+
+# =========================
+# Dataset cleaning
+# =========================
+def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    required_cols = {"question", "answer", "contexts"}
+    missing = required_cols - set(df.columns)
+    if missing:
+        raise RuntimeError(f"Dataset missing columns: {missing}")
+
+    print("🧹 Cleaning dataset...")
+
+    df["contexts"] = df["contexts"].apply(safe_parse_context)
+
+    invalid_rows = []
+
+    for i, row in df.iterrows():
+        if not isinstance(row["contexts"], list) or len(row["contexts"]) == 0:
+            invalid_rows.append(i)
+
+    if invalid_rows:
+        print("\nDATASET STILL DIRTY ❌")
+        print(f"Found invalid rows: {len(invalid_rows)}\n")
+
+        for i in invalid_rows:
+            print("Row:", i)
+            print("Question:", df.loc[i, "question"])
+            print("Answer:", df.loc[i, "answer"])
+            print("Contexts(raw):", df.loc[i, "contexts"])
+            print("------")
+
+        print("⚠️ Auto-removing invalid rows...")
+        df = df.drop(index=invalid_rows).reset_index(drop=True)
+
+    print(f"✅ Dataset clean. Total rows after clean: {len(df)}")
+    return df
+
+
+# =========================
+# Main
+# =========================
 def main():
-    # 2. Load dữ liệu từ CSV
-    print("🔄 Đang nạp dữ liệu đánh giá...")
-    df = pd.read_csv("rag_evaluation_dataset.csv")
+    base_dir = Path(__file__).resolve().parent.parent
+    env_path = base_dir / "api_chatbot" / ".env"
+    load_dotenv(dotenv_path=env_path)
 
-    # QUAN TRỌNG: Chuyển cột contexts từ chuỗi (string) về lại dạng List
-    df['contexts'] = df['contexts'].apply(ast.literal_eval)
+    api_groq_key = os.getenv("API_GROQ_KEY")
+    if not api_groq_key:
+        raise RuntimeError("Missing API_GROQ_KEY in environment or `.env`")
 
-    # Chuyển sang định dạng Dataset của HuggingFace
-    eval_dataset = Dataset.from_pandas(df)
-
-    # 3. Tiến hành đánh giá
-    print("🚀 Đang bắt đầu chấm điểm (Scoring)... Vui lòng đợi.")
-
-    # Chúng ta chỉ chọn các metrics không cần ground_truth
-    metrics = [
-        faithfulness,
-        answer_relevance,
-        context_precision
-    ]
-
-    result = evaluate(
-        dataset=eval_dataset,
-        metrics=metrics,
-        llm=judge_llm,
-        raise_exceptions=False
+    # -------- LLM --------
+    judge_llm = ChatGroq(
+        api_key=api_groq_key,
+        model="llama-3.3-70b-versatile",
+        temperature=0,
+        max_tokens=512,
     )
 
-    # 4. Xuất kết quả
-    print("\n" + "=" * 30)
-    print("📊 KẾT QUẢ ĐÁNH GIÁ TỔNG QUÁT")
-    print(result)
-    print("=" * 30)
+    # -------- Embeddings --------
+    embeddings = M3Embedder(BGEM3FlagModel("BAAI/bge-m3"))
 
-    # Lưu chi tiết điểm số của từng câu hỏi để phân tích lỗi
-    result_df = result.to_pandas()
-    result_df.to_csv("evaluation_report_detailed.csv", index=False, encoding='utf-8-sig')
-    print("✅ Đã lưu báo cáo chi tiết vào file: evaluation_report_detailed.csv")
+    # -------- Load data --------
+    print("📥 Loading evaluation data...")
+    df = pd.read_csv("rag_evaluation_dataset.csv", encoding="utf-8")
+
+    # -------- Clean data --------
+    df = clean_dataset(df)
+
+    # -------- HuggingFace dataset --------
+    eval_dataset = Dataset.from_pandas(df)
+
+    # -------- Evaluate --------
+    print("\n🚀 Evaluating with RAGAS...")
+    result = evaluate(
+        dataset=eval_dataset,
+        metrics=[faithfulness, answer_relevancy],
+        llm=judge_llm,
+        embeddings=embeddings,
+        raise_exceptions=False,
+    )
+
+    # -------- Save --------
+    print("\n📊 Evaluation result:")
+    print(result)
+
+    result.to_pandas().to_csv(
+        "evaluation_report_detailed.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+
+    print("\n✅ Saved: evaluation_report_detailed.csv")
 
 
 if __name__ == "__main__":

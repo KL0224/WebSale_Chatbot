@@ -1,120 +1,162 @@
-# Ứng dụng Quản Lý Bán Thiết Bị Điện Tử
+<!-- README (EN) -->
 
-## Giới thiệu
-Đây là một trang web quản lý bán thiết bị điện tử, hỗ trợ các nghiệp vụ quản lý sản phẩm, đơn hàng, khách hàng, kho hàng và kế toán. Ứng dụng hướng tới việc tối ưu hóa quy trình bán hàng, quản lý tồn kho và nâng cao trải nghiệm khách hàng cho các cửa hàng kinh doanh thiết bị điện tử.
+<div align="center">
 
-## Tính năng chính
-- **Quản lý sản phẩm:** Thêm, sửa, xóa, tìm kiếm và phân loại các thiết bị điện tử với thông tin chi tiết và hình ảnh.
-- **Quản lý đơn hàng:** Tạo, cập nhật, theo dõi trạng thái đơn hàng, lịch sử mua hàng của khách.
-- **Quản lý khách hàng:** Lưu trữ thông tin, lịch sử giao dịch.
-- **Quản lý kho:** Theo dõi tồn kho, nhập/xuất hàng, cảnh báo khi sắp hết hàng.
-- **Kế toán:** Báo cáo doanh thu.
-- **Phân quyền người dùng:** Hệ thống phân quyền cho quản trị viên, nhân viên bán hàng, nhân viên kho, nhân viên kế toán và khách hàng.
-- **Giao diện thân thiện:** Thiết kế responsive, dễ sử dụng trên giao diện web.
-- **Thông báo:** Cập nhật trạng thái đơn hàng, cảnh báo tồn kho, thông báo hệ thống.
+# <u>WebSales with RAG Chatbot</u>
+## <u>(Electronics sales management website integrated with a RAG chatbot for product & policy consulting)</u>
 
-## Công nghệ sử dụng
-- **Backend:** Python, Flask
-- **Frontend:** HTML, CSS, JavaScript (Vanilla JS)
-- **Cơ sở dữ liệu:** SQLAlchemy (MySQL hoặc các hệ quản trị CSDL khác)
-- **Template Engine:** Jinja2
-- **Quản lý migration:** Alembic
+</div>
 
-## Cấu trúc dự án
+---
+
+## 1) Overview
+This project is an electronics sales management website that supports **product, order, customer, staff, warehouse, and accounting management**. The system aims to optimize sales workflows, manage inventory efficiently, and improve the overall customer experience for electronics stores.
+
+In addition, the website integrates a **RAG-powered chatbot for product and store policy consulting** to improve service quality and customer support.
+
+## 2) Key features
+- **Consulting chatbot:** Uses a RAG system to answer questions about products and store policies.
+- **Product management:** Add, edit, delete, and search electronics products with detailed information and images.
+- **Order management:** Create, update, and track order status; view customers’ purchase history.
+- **Customer management:** Store customer profiles and transaction history.
+- **Warehouse management:** Track inventory, handle inbound/outbound operations, and alert when stock is low.
+- **Accounting:** Revenue reporting.
+- **User roles & permissions:** Admin, sales staff, warehouse staff, accounting staff, and customers.
+- **Friendly UI:** Responsive design, easy to use on the web.
+- **Notifications:** Order status updates, low-stock alerts, and system notifications.
+
+## 3) Architecture
+### 3.1) Website
+- Website architecture/design documentation: see the `report/` folder in this repo.
+
+### 3.2) RAG Chatbot
+#### High-level diagram
+
+![RAG Architecture](assets/rag.png)
+
+#### Flow
+1. The user submits a question.
+2. The **Router** classifies the question as `policy`, `product`, or `chitchat`.
+3. For **chitchat**: the system uses conversation history (**memory**) + a chitchat prompt and sends it to the **LLM**.
+4. For **policy/product** questions:
+   - **Rewrite** the query (spell correction and pronoun normalization suitable for policy/product).
+   - Query **Qdrant** to retrieve `top-k` documents.
+   - Use a **reranker** to select the most relevant `n` documents.
+   - Combine `n` documents + query + memory into the prompt and send to the **LLM**.
+5. The answer is saved into memory and chat history, then returned to the UI.
+
+## 4) Tech stack
+### 4.1) Website
+- Backend: Python, Flask
+- Frontend: HTML, CSS, Vanilla JavaScript
+- Database: MySQL (SQLAlchemy)
+- Template Engine: Jinja2
+- Migrations: Alembic
+
+### 4.2) Chatbot
+- API: FastAPI
+- LLM: Groq API Key
+- Embeddings: `BAAI/bge-m3` (FlagEmbedding)
+- Router model: `Qwen/Qwen1.5-1.8B-Chat` (transformers)
+- Reranker: `BAAI/bge-reranker-v2-m3` (FlagEmbedding)
+- Vector DB: Qdrant
+- Memory: Redis
+- Chat history: MongoDB
+
+## 5) Project structure
+```text
+Flask-Ecommerce/
+├── assets/
+│   ├── chat1.png
+│   ├── chat2.png
+│   ├── chat3.png
+│   ├── rag.png
+│   └── web.png
+├── chatbot/
+│   ├── api_chatbot/
+│   │   ├── deps.py
+│   │   ├── main.py
+│   │   ├── pipeline.py
+│   │   └── schema.py
+│   ├── prepare_database/
+│   ├── history/
+│   ├── router/
+│   ├── reranking/
+│   ├── prompt/
+│   ├── pyproject.toml
+│   └── uv.lock
+├── migrations/
+├── report/
+├── shop/
+│   ├── accounting/
+│   ├── admin/
+│   ├── carts/
+│   ├── customers/
+│   ├── products/
+│   ├── sale/
+│   ├── warehouse/
+│   ├── static/
+│   └── templates/
+├── docker-compose.yml
+├── main.py
+├── web_requirements.txt
+└── chatbot_requirements.txt
 ```
-shop/
-    __init__.py
-    models.py
-    decorators.py
-    accounting/
-    admin/
-    carts/
-    customers/
-    products/
-    sale/
-    warehouse/
-    static/
-        css/
-        js/
-        images/
-    templates/
-        ...
-main.py
-requirements.txt
-README.md
+
+## 6) Installation & usage
+### 6.1) Clone the repo
+```bash
+git clone https://github.com/KL0224/WebSale_Chatbot.git
 ```
 
-## Hướng dẫn cài đặt
-1. **Clone dự án:**
-   ```bash
-   git clone <repository-url>
-   cd Flask-Ecommerce
-   ```
-2. **Tạo môi trường ảo:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   ```
-3. **Cài đặt thư viện:**
-   ```bash
-   pip install -r web_requirements.txt
-   ```
-4. **Khởi tạo cơ sở dữ liệu:**
-   ```bash
-   flask db upgrade
-   ```
-5. **Chạy ứng dụng:**
-   ```bash
-   flask run
-   ```
-6. **Truy cập:**
-   Mở trình duyệt và truy cập `http://127.0.0.1:5000/`
+### 6.2) Virtual environments (recommended: separate envs for web & chatbot)
+- **Web**
+  ```bash
+  pip install -r web_requirements.txt
+  ```
 
-## Hướng dẫn sử dụng
-### 1. Đăng nhập/Đăng ký
-- Người dùng có thể đăng ký tài khoản mới hoặc đăng nhập bằng tài khoản đã có.
-- Hệ thống phân quyền: Quản trị viên, nhân viên bán hàng, nhân viên kho, nhân viên kế toán, khách hàng.
+- **Chatbot** (uses `uv` — run inside the folder that contains `uv.lock`)
+  ```bash
+  uv sync
+  ```
 
-### 2. Quản trị viên
-- Quản lý người dùng: Thêm, sửa, xóa tài khoản nhân viên và khách hàng.
-- Quản lý sản phẩm: Thêm mới, chỉnh sửa, xóa, cập nhật thông tin sản phẩm.
-- Xem báo cáo doanh thu, thống kê đơn hàng, quản lý hệ thống.
+### 6.3) Databases
+- Website DB: **MySQL** (install locally).
+- RAG chatbot services: run `docker-compose.yml`
+  ```bash
+  docker compose up -d
+  ```
 
-### 3. Nhân viên bán hàng
-- Tạo mới đơn hàng cho khách, cập nhật trạng thái đơn hàng.
-- Quản lý danh sách khách hàng, xem lịch sử mua hàng.
-- Tìm kiếm, lọc sản phẩm để tư vấn khách hàng.
+### 6.4) Run
+- **Web** (from the project root, activate the web environment)
+  ```bash
+  python main.py
+  ```
+  Open: http://localhost:5000
 
-### 4. Nhân viên kho
-- Quản lý nhập/xuất kho, cập nhật số lượng tồn kho.
-- Theo dõi cảnh báo khi sản phẩm sắp hết hàng.
-- Xem lịch sử nhập/xuất kho.
+- **Chatbot** (run in `chatbot/`)
+  ```bash
+  uvicorn api_chatbot.main:app --host 0.0.0.0 --port 8000
+  ```
 
-### 5. Nhân viên kế toán
-- Quản lý hóa đơn bán hàng, hóa đơn nhập kho.
-- Theo dõi, xác nhận và cập nhật trạng thái thanh toán các đơn hàng.
-- Xem, xuất báo cáo doanh thu, chi phí, lợi nhuận.
+## 7) UI screenshots
+### 7.1) Website
+![Web UI](assets/web.png)
 
-### 6. Khách hàng
-- Duyệt, tìm kiếm, lọc sản phẩm theo danh mục, thương hiệu.
-- Xem chi tiết sản phẩm, thêm vào giỏ hàng, đặt hàng trực tuyến.
-- Theo dõi trạng thái đơn hàng, xem lịch sử mua hàng.
-- Cập nhật thông tin cá nhân, đổi mật khẩu.
+### 7.2) Chatbot
+<table>
+  <tr>
+    <td><img src="assets/chat1.png" alt="chat1" /></td>
+    <td><img src="assets/chat2.png" alt="chat2" /></td>
+    <td><img src="assets/chat3.png" alt="chat3" /></td>
+  </tr>
+</table>
 
-### 7. Các chức năng khác
-- Nhận thông báo về trạng thái đơn hàng, khuyến mãi, cảnh báo tồn kho.
-- Hỗ trợ liên hệ, gửi phản hồi qua trang liên hệ.
+## 8) Contributing
+Contact: **phamanhkiet97123@gmail.com**
 
-## Thành viên nhóm
-- Phạm Anh Kiệt - (Leader + Backend + AI) 
-- Lương Văn Duy - (Frontend)
-- Nguyễn Hà Vũ Kha (Tester)
+## 9) License
+MIT
 
-## Đóng góp
-Chào mừng mọi đóng góp! Hãy fork repository và gửi pull request để được xem xét.
+---
 
-## Giấy phép
-Dự án được phát hành theo giấy phép MIT.
-
-## Liên hệ
-Mọi thắc mắc hoặc hỗ trợ, vui lòng liên hệ qua GitHub Issues.

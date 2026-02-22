@@ -19,45 +19,81 @@ class IdentityClassificationLLM:
 
     def classify(self, query):
         # Sử dụng cleandoc để prompt sạch sẽ, không bị dính khoảng trắng lùi lề của Python
+        from inspect import cleandoc
+
         prompt = cleandoc(f"""
         You are an intent classification system for an e-commerce assistant.
-        
-        Your task:
-        Classify the user message into EXACTLY ONE of the following labels:
+
+        TASK:
+        Classify the user message into EXACTLY ONE label.
+
+        LABELS:
         - policy
         - product
-        - normal
-        
-        DEFINITION:
-        
+        - chitchat
+
+        --------------------------------
+        LABEL DEFINITIONS:
+
         policy:
-        Questions about warranty, return policy, shipping, payment, store rules.
-        
+        Questions about:
+        - warranty
+        - return / refund
+        - shipping / delivery
+        - payment methods
+        - store rules
+        - order processing
+        - invoices, bills
+        - policies and procedures
+
         product:
-        Questions about price, features, availability, comparison, recommendations.
-        
+        Questions about:
+        - price
+        - features
+        - specifications
+        - availability
+        - comparison
+        - recommendations
+        - product quality
+        - usage suitability
+
         chitchat:
-        Greetings, small talk, compliments, general conversation unrelated to product or policy.
-        
+        - greetings
+        - small talk
+        - emotions
+        - compliments
+        - casual conversation
+        - unrelated topics
+        --------------------------------
+
         STRICT RULES:
-        - Return ONLY one word.
-        - No explanation.
-        - No punctuation.
-        - No additional text.
-        
-        Examples:
-        
+        - Return ONLY ONE word
+        - No explanation
+        - No punctuation
+        - No extra text
+        - No formatting
+        - No JSON
+        - No markdown
+
+        --------------------------------
+        EXAMPLES:
+
         User: "Shop có chính sách bảo hành như thế nào?"
         Label: policy
-        
+
         User: "iPhone 15 Pro Max giá bao nhiêu?"
         Label: product
-        
+
         User: "Chào bạn, hôm nay bạn thế nào?"
         Label: chitchat
-        
+
+        --------------------------------
+        INPUT:
         User: "{query}"
-        Label:""")
+
+        OUTPUT:
+        Label:
+        """)
 
         # Tokenize input
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)

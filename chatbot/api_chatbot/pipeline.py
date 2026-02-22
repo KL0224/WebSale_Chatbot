@@ -323,124 +323,124 @@ class RAGPipeLine:
                 full_answer = "".join(answer_buffer)
                 self.memory.save(session_id, query, full_answer)
 
-    def run_eval_batch(self, query: str):
-        """
-        Phiên bản rút gọn dành riêng cho Evaluation:
-        - Không lưu Memory/Redis
-        - Không dùng Chat History
-        - Trả về định dạng chuẩn để Eval
-        """
-        try:
-            # 1. Router: Xác định ý định
-            intent = self.router_model.classify(query)
+    # def run_eval_batch(self, query: str):
+    #     """
+    #     Phiên bản rút gọn dành riêng cho Evaluation:
+    #     - Không lưu Memory/Redis
+    #     - Không dùng Chat History
+    #     - Trả về định dạng chuẩn để Eval
+    #     """
+    #     try:
+    #         # 1. Router: Xác định ý định
+    #         intent = self.router_model.classify(query)
+    #
+    #         # 2. Retrieval: Tìm kiếm dữ liệu
+    #         results = self.retrieval(query, intent)
+    #
+    #         if results is None or len(results) == 0:
+    #             # Nếu không tìm thấy docs (chitchat hoặc lỗi search)
+    #             answer = self.llm.generate(intent, query, context="", chat_history="")
+    #             return {
+    #                 "question": query,
+    #                 "answer": answer,
+    #                 "contexts": [],  # Trả về list rỗng nếu không có docs
+    #                 "intent": intent
+    #             }
+    #
+    #         # 3. Rerank: Sắp xếp lại
+    #         reranked_results = self.rerank(query, results, top_n=5)
+    #
+    #         # 4. Build Context & Get Raw Chunks: Ragas cần list các chuỗi văn bản gốc
+    #         raw_contexts = [
+    #             item['point'].payload.get("text_answer", "")
+    #             for item in reranked_results
+    #         ]
+    #
+    #         # Context gộp để nạp vào Prompt cho LLM
+    #         context_for_llm = self.build_context(reranked_results)
+    #
+    #         # 5. LLM Generate Answer
+    #         answer = self.llm.generate(intent, query, context_for_llm, chat_history="")
+    #
+    #         return {
+    #             "question": query,
+    #             "answer": answer,
+    #             "contexts": raw_contexts,  # List of strings chuẩn Ragas
+    #             "intent": intent
+    #         }
+    #     except Exception as e:
+    #         print(f"Error processing query '{query}': {e}")
+    #         return None
 
-            # 2. Retrieval: Tìm kiếm dữ liệu
-            results = self.retrieval(query, intent)
-
-            if results is None or len(results) == 0:
-                # Nếu không tìm thấy docs (chitchat hoặc lỗi search)
-                answer = self.llm.generate(intent, query, context="", chat_history="")
-                return {
-                    "question": query,
-                    "answer": answer,
-                    "contexts": [],  # Trả về list rỗng nếu không có docs
-                    "intent": intent
-                }
-
-            # 3. Rerank: Sắp xếp lại
-            reranked_results = self.rerank(query, results, top_n=5)
-
-            # 4. Build Context & Get Raw Chunks: Ragas cần list các chuỗi văn bản gốc
-            raw_contexts = [
-                item['point'].payload.get("text_answer", "")
-                for item in reranked_results
-            ]
-
-            # Context gộp để nạp vào Prompt cho LLM
-            context_for_llm = self.build_context(reranked_results)
-
-            # 5. LLM Generate Answer
-            answer = self.llm.generate(intent, query, context_for_llm, chat_history="")
-
-            return {
-                "question": query,
-                "answer": answer,
-                "contexts": raw_contexts,  # List of strings chuẩn Ragas
-                "intent": intent
-            }
-        except Exception as e:
-            print(f"Error processing query '{query}': {e}")
-            return None
-
-def main():
-    # --- Bước 1: Khởi tạo Pipeline ---
-    print("Khởi tạo model LLM")
-    llm = LLM(api_key=api_groq_key, model="llama-3.3-70b-versatile", max_tokens=512)
-
-    print("Khởi tạo router")
-    router = IdentityClassificationLLM(model_name="Qwen/Qwen2.5-1.5B-Instruct")
-
-    print("Khởi tạo embedding model")
-    embedding = EmbeddingModel(model_name="BAAI/bge-m3")
-    embedding.load_model()
-
-    print("Khởi tạo QdrantDB")
-    qdrant = QdrantDB(host="localhost", port=6333)
-
-    print("Khởi tạo Reranker")
-    reranker = Reranker(model_name="BAAI/bge-reranker-v2-m3")
-
-    print("Khởi tạo pipeline")
-    pipeline = RAGPipeLine(
-        llm=llm,
-        embedding_model=embedding,
-        qdrant_client=qdrant,
-        router=router,
-        reranker=reranker,
-        memory_manager=None,
-        product_collection="products",
-        policy_collection="policies",
-    )
-
-    # --- Bước 2: Đọc file 50 câu hỏi ---
-    input_txt = "evaluation/questions.txt"  # File của bạn
-    output_csv = "rag_evaluation_dataset.csv"
-
-    if not os.path.exists(input_txt):
-        print(f"❌ Không tìm thấy file {input_txt}")
-        return
-
-    with open(input_txt, "r", encoding="utf-8") as f:
-        # Đọc từng dòng, bỏ khoảng trắng thừa và loại bỏ dòng trống
-        questions = [line.strip() for line in f if line.strip()]
-
-    final_eval_results = []
-    print(f"🚀 Đã tìm thấy {len(questions)} câu hỏi. Bắt đầu xử lý...")
-
-    print(f"🚀 Đang chạy đánh giá cho {len(questions)} câu hỏi...")
-
-    # --- Bước 3: Chạy vòng lặp tạo dữ liệu ---
-    for q in tqdm(questions):
-        res = pipeline.run_eval_batch(q)
-        if res:
-            final_eval_results.append(res)
-
-        # Nghỉ 1s để tránh Rate Limit của Groq
-        time.sleep(1)
-
-    # --- Bước 4: Lưu kết quả ---
-    df_output = pd.DataFrame(final_eval_results)
-
-    df_output.to_csv(output_csv, index=False, encoding='utf-8-sig')
-
-    print(f"\n✅ Đã lưu file đánh giá tại: {output_csv}")
-
-
-if __name__ == "__main__":
-    main()
-
-
-
+# def main():
+#     # --- Bước 1: Khởi tạo Pipeline ---
+#     print("Khởi tạo model LLM")
+#     llm = LLM(api_key=api_groq_key, model="llama-3.3-70b-versatile", max_tokens=512)
+#
+#     print("Khởi tạo router")
+#     router = IdentityClassificationLLM(model_name="Qwen/Qwen2.5-1.5B-Instruct")
+#
+#     print("Khởi tạo embedding model")
+#     embedding = EmbeddingModel(model_name="BAAI/bge-m3")
+#     embedding.load_model()
+#
+#     print("Khởi tạo QdrantDB")
+#     qdrant = QdrantDB(host="localhost", port=6333)
+#
+#     print("Khởi tạo Reranker")
+#     reranker = Reranker(model_name="BAAI/bge-reranker-v2-m3")
+#
+#     print("Khởi tạo pipeline")
+#     pipeline = RAGPipeLine(
+#         llm=llm,
+#         embedding_model=embedding,
+#         qdrant_client=qdrant,
+#         router=router,
+#         reranker=reranker,
+#         memory_manager=None,
+#         product_collection="products",
+#         policy_collection="policies",
+#     )
+#
+#     # --- Bước 2: Đọc file 50 câu hỏi ---
+#     input_txt = "evaluation/question3.txt"
+#     output_csv = "rag_evaluation_dataset3.csv"
+#
+#     if not os.path.exists(input_txt):
+#         print(f"❌ Không tìm thấy file {input_txt}")
+#         return
+#
+#     with open(input_txt, "r", encoding="utf-8") as f:
+#         # Đọc từng dòng, bỏ khoảng trắng thừa và loại bỏ dòng trống
+#         questions = [line.strip() for line in f if line.strip()]
+#
+#     final_eval_results = []
+#     print(f"🚀 Đã tìm thấy {len(questions)} câu hỏi. Bắt đầu xử lý...")
+#
+#     print(f"🚀 Đang chạy đánh giá cho {len(questions)} câu hỏi...")
+#
+#     # --- Bước 3: Chạy vòng lặp tạo dữ liệu ---
+#     for q in tqdm(questions):
+#         res = pipeline.run_eval_batch(q)
+#         if res:
+#             final_eval_results.append(res)
+#
+#         # Nghỉ 1s để tránh Rate Limit của Groq
+#         time.sleep(1)
+#
+#     # --- Bước 4: Lưu kết quả ---
+#     df_output = pd.DataFrame(final_eval_results)
+#
+#     df_output.to_csv(output_csv, index=False, encoding='utf-8-sig')
+#
+#     print(f"\n✅ Đã lưu file đánh giá tại: {output_csv}")
+#
+#
+# if __name__ == "__main__":
+#     main()
+#
+#
+#
 
 
 
