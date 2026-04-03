@@ -45,6 +45,14 @@ In addition, the website integrates a **RAG-powered chatbot for product and stor
    - Combine `n` documents + query + memory into the prompt and send to the **LLM**.
 5. The answer is saved into memory and chat history, then returned to the UI.
 
+### 3.3) Evaluation
+The RAG system was evaluated on a dataset of 43 samples with the following results:
+
+| Metric | Score |
+| :--- | :--- |
+| **Faithfulness** | 80.23% |
+| **Answer Relevancy** | 89.43% |
+
 ## 4) Tech stack
 ### 4.1) Website
 - Backend: Python, Flask
